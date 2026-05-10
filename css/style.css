@@ -518,6 +518,16 @@ section { padding: 5rem 2rem; }
 
 .gallery-item.large { grid-column: span 2; grid-row: span 2; font-size: 5rem; }
 
+/* Full-bleed img inside gallery preview cards */
+.gallery-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
 .gallery-overlay {
   position: absolute;
   inset: 0;
