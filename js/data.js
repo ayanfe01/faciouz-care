@@ -8,6 +8,7 @@ const FC = (() => {
   let _menu = [];
   let _info = {};
   let _password = 'faciouz2026';
+  let _siteImages = {};
 
   const DEFAULT_INFO = {
     restaurantName: 'Faciouz Care',
@@ -75,10 +76,11 @@ const FC = (() => {
   return {
     // ── Init: call once on every page before using any FC methods ──
     async init() {
-      const [menuRes, infoRes, passRes] = await Promise.all([
+      const [menuRes, infoRes, passRes, siteImgRes] = await Promise.all([
         sb.from('menu_items').select('*').order('id'),
         sb.from('settings').select('value').eq('key', 'info').maybeSingle(),
         sb.from('settings').select('value').eq('key', 'password').maybeSingle(),
+        sb.from('settings').select('value').eq('key', 'site_images').maybeSingle(),
       ]);
 
       if (menuRes.data && menuRes.data.length > 0) {
@@ -90,6 +92,7 @@ const FC = (() => {
 
       _info = infoRes?.data?.value ? { ...DEFAULT_INFO, ...infoRes.data.value } : { ...DEFAULT_INFO };
       _password = passRes?.data?.value || 'faciouz2026';
+      _siteImages = siteImgRes?.data?.value || {};
     },
 
     // ── Menu (reads from memory cache) ──
@@ -127,6 +130,14 @@ const FC = (() => {
     async saveInfo(info) {
       _info = { ..._info, ...info };
       await sb.from('settings').upsert({ key: 'info', value: _info });
+    },
+
+    // ── Site Images (non-dish, non-gallery images e.g. About photo) ──
+    getSiteImages: () => _siteImages,
+    async setSiteImage(key, url) {
+      _siteImages = { ..._siteImages, [key]: url };
+      const { error } = await sb.from('settings').upsert({ key: 'site_images', value: _siteImages });
+      if (error) throw error;
     },
 
     // ── Reservations ──

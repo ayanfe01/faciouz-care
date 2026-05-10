@@ -290,6 +290,9 @@
       <a onclick="showView('info')" id="nav-info">
         <span class="nav-icon">🏪</span> Restaurant Info
       </a>
+      <a onclick="showView('images')" id="nav-images">
+        <span class="nav-icon">🖼️</span> Site Images
+      </a>
       <a onclick="showView('gallery')" id="nav-gallery">
         <span class="nav-icon">📸</span> Gallery
       </a>
@@ -616,6 +619,12 @@
         </div>
       </div>
 
+      <!-- ─── SITE IMAGES ─── -->
+      <div class="view" id="view-images">
+        <p style="color:#666;margin-bottom:1.5rem;">Upload or change images used across the website. Dish photos are managed in <strong>Menu Items</strong>. Gallery photos are managed in <strong>Gallery</strong>.</p>
+        <div id="site-images-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;"></div>
+      </div>
+
       <!-- ─── GALLERY ─── -->
       <div class="view" id="view-gallery">
         <div class="card" style="margin-bottom:1.5rem;">
@@ -791,8 +800,8 @@ function setBadge(id, n) {
 }
 
 /* ── Navigation ── */
-const VIEWS = ['dashboard', 'analytics', 'menu', 'info', 'gallery', 'reservations', 'orders', 'messages', 'reviews', 'settings'];
-const TITLES = { dashboard: 'Dashboard', analytics: 'Analytics', menu: 'Menu Items', info: 'Restaurant Info', gallery: 'Gallery', reservations: 'Reservations', orders: 'Orders', messages: 'Messages', reviews: 'Customer Reviews', settings: 'Settings' };
+const VIEWS = ['dashboard', 'analytics', 'menu', 'info', 'images', 'gallery', 'reservations', 'orders', 'messages', 'reviews', 'settings'];
+const TITLES = { dashboard: 'Dashboard', analytics: 'Analytics', menu: 'Menu Items', info: 'Restaurant Info', images: 'Site Images', gallery: 'Gallery', reservations: 'Reservations', orders: 'Orders', messages: 'Messages', reviews: 'Customer Reviews', settings: 'Settings' };
 let _currentView = 'dashboard';
 
 function showView(name) {
@@ -808,6 +817,7 @@ function showView(name) {
   if (name === 'analytics') renderAnalytics();
   if (name === 'gallery') renderGallery();
   if (name === 'reviews') renderReviews();
+  if (name === 'images') renderSiteImages();
 }
 
 /* ── Dashboard ── */
@@ -986,6 +996,88 @@ async function deleteGalleryPhoto(id) {
   await FC.deleteGalleryPhoto(id);
   renderGallery();
   toast('Photo deleted.', 'success');
+}
+
+/* ── Site Images ── */
+const SITE_IMAGE_SLOTS = [
+  { key: 'about_photo',        label: 'About / Our Story Photo',          page: 'Homepage & About',  hint: 'The big photo in the "Our Story" section.' },
+  { key: 'hero_cell_1',        label: 'Hero — Jollof Rice Photo',          page: 'Homepage Hero',     hint: 'Top-left photo in the hero image grid.' },
+  { key: 'hero_cell_2',        label: 'Hero — Amala / Swallow Photo',      page: 'Homepage Hero',     hint: 'Top-right photo in the hero image grid.' },
+  { key: 'hero_cell_3',        label: 'Hero — Soup / Egusi Photo',         page: 'Homepage Hero',     hint: 'Bottom-right photo in the hero image grid.' },
+  { key: 'strip_jollof',       label: 'Food Strip — Jollof Rice',          page: 'Homepage Strip',    hint: 'First item in the food photo strip.' },
+  { key: 'strip_amala',        label: 'Food Strip — Amala',                page: 'Homepage Strip',    hint: 'Second item in the food photo strip.' },
+  { key: 'strip_friedrice',    label: 'Food Strip — Fried Rice',           page: 'Homepage Strip',    hint: 'Third item in the food photo strip.' },
+  { key: 'strip_egusi',        label: 'Food Strip — Egusi Soup',           page: 'Homepage Strip',    hint: 'Fourth item in the food photo strip.' },
+  { key: 'strip_pepeprsoup',   label: 'Food Strip — Pepper Soup',          page: 'Homepage Strip',    hint: 'Fifth item in the food photo strip.' },
+  { key: 'strip_suya',         label: 'Food Strip — Suya',                 page: 'Homepage Strip',    hint: 'Sixth item in the food photo strip.' },
+  { key: 'strip_cakes',        label: 'Food Strip — Cakes',                page: 'Homepage Strip',    hint: 'Seventh item in the food photo strip.' },
+];
+
+function renderSiteImages() {
+  const siteImgs = FC.getSiteImages();
+  const grid = document.getElementById('site-images-grid');
+  grid.innerHTML = SITE_IMAGE_SLOTS.map(slot => {
+    const current = siteImgs[slot.key] || '';
+    return `
+    <div class="card" style="overflow:hidden;">
+      <div style="height:180px;background:url('${current}') center/cover,linear-gradient(135deg,#333,#555);position:relative;display:flex;align-items:center;justify-content:center;">
+        ${current ? '' : '<span style="color:rgba(255,255,255,0.4);font-size:2.5rem;">🖼️</span>'}
+        <div style="position:absolute;top:.5rem;right:.5rem;background:rgba(0,0,0,.55);color:#fff;font-size:.65rem;padding:.2rem .5rem;border-radius:20px;">${slot.page}</div>
+      </div>
+      <div style="padding:1rem;">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:.2rem;">${slot.label}</div>
+        <div style="color:#888;font-size:.78rem;margin-bottom:.75rem;">${slot.hint}</div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+          <label style="flex:1;cursor:pointer;">
+            <input type="file" accept="image/*" style="display:none" onchange="uploadSiteImage('${slot.key}', this)" />
+            <span class="btn" style="width:100%;display:block;text-align:center;font-size:.82rem;padding:.5rem .75rem;background:var(--orange);color:#fff;border-radius:6px;cursor:pointer;">📤 Upload Photo</span>
+          </label>
+          <button onclick="pasteSiteImageUrl('${slot.key}')" class="btn" style="font-size:.82rem;padding:.5rem .75rem;background:#f0f0f0;color:#333;border:none;border-radius:6px;cursor:pointer;">🔗 Paste URL</button>
+          ${current ? `<button onclick="clearSiteImage('${slot.key}')" class="btn" style="font-size:.82rem;padding:.5rem .75rem;background:#fff0f0;color:#c00;border:none;border-radius:6px;cursor:pointer;">🗑️</button>` : ''}
+        </div>
+        ${current ? `<div style="margin-top:.5rem;font-size:.72rem;color:#aaa;word-break:break-all;max-height:2.4em;overflow:hidden;">${current}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function uploadSiteImage(key, input) {
+  const file = input.files[0];
+  if (!file) return;
+  toast('Uploading image…');
+  try {
+    let blob;
+    try { blob = await compressToBlob(file, 1200); } catch { blob = file; }
+    const url = await FC.uploadFile(new File([blob], file.name, { type: blob.type }), 'site-images');
+    await FC.setSiteImage(key, url);
+    toast('Image updated!', 'success');
+    renderSiteImages();
+  } catch (err) {
+    toast('Upload failed: ' + (err?.message || 'unknown error'), 'error');
+  }
+}
+
+async function pasteSiteImageUrl(key) {
+  const url = prompt('Paste the image URL:');
+  if (!url || !url.startsWith('http')) return;
+  try {
+    await FC.setSiteImage(key, url);
+    toast('Image URL saved!', 'success');
+    renderSiteImages();
+  } catch (err) {
+    toast('Save failed: ' + (err?.message || 'unknown error'), 'error');
+  }
+}
+
+async function clearSiteImage(key) {
+  if (!confirm('Remove this image? The default placeholder will show instead.')) return;
+  try {
+    await FC.setSiteImage(key, '');
+    toast('Image removed.', 'success');
+    renderSiteImages();
+  } catch (err) {
+    toast('Failed: ' + (err?.message || ''), 'error');
+  }
 }
 
 /* ── Menu ── */
