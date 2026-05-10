@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faciouz Care – Authentic Nigerian Cuisine</title>
+  <meta name="description" content="Experience the rich flavours of Nigeria at Faciouz Care. Amala, Jollof Rice, Fried Rice and more. Dine in or reserve a table today." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="Faciouz Care logo.jpeg" type="image/jpeg" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement-bar">
+  🎉 NOW OPEN! &nbsp;|&nbsp; Delivery Available &nbsp;|&nbsp; Call: <a href="tel:07069401415">07069401415</a> / <a href="tel:08033648400">08033648400</a>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="Faciouz Care logo.jpeg" alt="Faciouz Care Logo" />
+    <span>Faciouz Care</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="reservations.html">Reservations</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="order.html" class="btn-order">Order Online</a></li>
+  </ul>
+  <button class="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-split">
+
+    <!-- LEFT: Text -->
+    <div class="hero-left">
+      <div class="hero-badge">🎉 NOW OPEN! &nbsp;·&nbsp; Delivery Available</div>
+      <h1>Welcome to<br/><span>Faciouz Care</span></h1>
+      <p class="satisfaction-tagline">...it's all about satisfaction!</p>
+      <p>Nigerian Delicacies · Cakes · Events · Weddings · Catering &amp; More — Indoor &amp; Outdoor Services across Ogun State.</p>
+      <div class="hero-btns" style="justify-content:flex-start;">
+        <a href="menu.html" class="btn btn-primary">🍽️ View Menu</a>
+        <a href="order.html" class="btn btn-green">🛒 Order Now</a>
+        <a href="reservations.html" class="btn btn-secondary">📅 Book a Table</a>
+      </div>
+    </div>
+
+    <!-- RIGHT: Food visual -->
+    <div class="hero-right">
+      <div class="hero-food-visual">
+        <div class="hero-food-grid">
+          <div class="hero-food-cell tall" style="background:linear-gradient(135deg,#C0390A,#F06000)">🍛</div>
+          <div class="hero-food-cell" style="background:linear-gradient(135deg,#3D1A00,#6B3200)">🍲</div>
+          <div class="hero-food-cell" style="background:linear-gradient(135deg,#1B6228,#2E8B3A)">🥣</div>
+        </div>
+        <div class="order-badge">
+          <strong>ORDER</strong>NOW!<br/>DELIVERY<br/>AVAILABLE
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-dot"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- FOOD STRIP (like the flyer's horizontal photo row) -->
+<div class="food-strip">
+  <div class="food-strip-item" data-name="Jollof Rice" style="background:linear-gradient(135deg,#C0390A,#F06000)">🍛</div>
+  <div class="food-strip-item" data-name="Amala" style="background:linear-gradient(135deg,#3D1A00,#6B3200)">🍲</div>
+  <div class="food-strip-item" data-name="Fried Rice" style="background:linear-gradient(135deg,#7A6000,#C4A000)">🍚</div>
+  <div class="food-strip-item" data-name="Egusi Soup" style="background:linear-gradient(135deg,#1B6228,#2E8B3A)">🥣</div>
+  <div class="food-strip-item" data-name="Pepper Soup" style="background:linear-gradient(135deg,#8B0000,#CC2200)">🍖</div>
+  <div class="food-strip-item" data-name="Suya" style="background:linear-gradient(135deg,#3A1A00,#6B3200)">🥩</div>
+  <div class="food-strip-item" data-name="Cakes" style="background:linear-gradient(135deg,#6B006B,#AA00AA)">🎂</div>
+</div>
+
+<!-- Wave: cream → light -->
+<div class="wave-divider" style="background:#FFF8F0;">
+  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,0 C480,60 960,0 1440,60 L1440,0 Z" fill="#FFF8F0"/>
+  </svg>
+</div>
+
+<!-- FEATURED DISHES -->
+<section class="dishes-section">
+  <div class="section-header">
+    <span class="section-label">Signature Dishes</span>
+    <h2>Our Most Loved Meals</h2>
+    <div class="divider"></div>
+    <p>Every dish is prepared fresh with authentic Nigerian spices and the finest local ingredients.</p>
+  </div>
+  <div class="dishes-grid">
+    <div class="dish-card">
+      <div class="dish-img amala">🍲</div>
+      <div class="dish-body">
+        <h3>Amala & Ewedu</h3>
+        <p>Smooth yam flour swallow served with rich ewedu soup and assorted meat.</p>
+        <div class="dish-footer">
+          <span class="dish-price">₦2,500</span>
+          <span class="dish-tag">Best Seller</span>
+        </div>
+      </div>
+    </div>
+    <div class="dish-card">
+      <div class="dish-img jollof">🍛</div>
+      <div class="dish-body">
+        <h3>Party Jollof Rice</h3>
+        <p>The legendary smoky Nigerian party rice with a perfect tomato base and your choice of protein.</p>
+        <div class="dish-footer">
+          <span class="dish-price">₦2,000</span>
+          <span class="dish-tag">Popular</span>
+        </div>
+      </div>
+    </div>
+    <div class="dish-card">
+      <div class="dish-img fried">🍚</div>
+      <div class="dish-body">
+        <h3>Special Fried Rice</h3>
+        <p>Fragrant fried rice loaded with vegetables, shrimp, and your choice of meat or fish.</p>
+        <div class="dish-footer">
+          <span class="dish-price">₦2,200</span>
+          <span class="dish-tag">Chef's Pick</span>
+        </div>
+      </div>
+    </div>
+    <div class="dish-card">
+      <div class="dish-img egusi">🥣</div>
+      <div class="dish-body">
+        <h3>Egusi Soup</h3>
+        <p>Rich melon seed soup cooked with palm oil, assorted meats, and leafy greens.</p>
+        <div class="dish-footer">
+          <span class="dish-price">₦2,800</span>
+          <span class="dish-tag">Traditional</span>
+        </div>
+      </div>
+    </div>
+    <div class="dish-card">
+      <div class="dish-img pounded">🫙</div>
+      <div class="dish-body">
+        <h3>Pounded Yam</h3>
+        <p>Classic smooth pounded yam — perfect with any of our rich Nigerian soups.</p>
+        <div class="dish-footer">
+          <span class="dish-price">₦1,800</span>
+          <span class="dish-tag">Classic</span>
+        </div>
+      </div>
+    </div>
+    <div class="dish-card">
+      <div class="dish-img pepper">🍖</div>
+      <div class="dish-body">
+        <h3>Pepper Soup</h3>
+        <p>Spicy and aromatic soup with catfish or goat meat — the perfect Nigerian comfort food.</p>
+        <div class="dish-footer">
+          <span class="dish-price">₦3,000</span>
+          <span class="dish-tag">Spicy 🌶️</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Wave: light → white -->
+<div class="wave-divider" style="background:#ffffff;">
+  <svg viewBox="0 0 1440 55" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,55 C360,0 1080,55 1440,0 L1440,55 Z" fill="#FFF8F0"/>
+  </svg>
+</div>
+
+<!-- ABOUT SNIPPET -->
+<section style="padding: 5rem 2rem; background: var(--white);">
+  <div class="about-snippet">
+    <div class="about-img-wrap">🍳</div>
+    <div class="about-text">
+      <span class="section-label">Our Story</span>
+      <h2>Rooted in Nigerian Tradition</h2>
+      <div class="divider"></div>
+      <p>Faciouz Care was born from a deep love for Nigerian food and community. We believe every meal should feel like home — warm, generous, and full of flavour.</p>
+      <p>Our chefs use time-honoured recipes passed down through generations, combining traditional techniques with the freshest local produce to deliver an unforgettable dining experience.</p>
+      <div class="about-stats">
+        <div class="stat"><div class="stat-num">5+</div><div class="stat-label">Years Serving</div></div>
+        <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Menu Items</div></div>
+        <div class="stat"><div class="stat-num">10k+</div><div class="stat-label">Happy Guests</div></div>
+      </div>
+      <br/>
+      <a href="about.html" class="btn btn-primary" style="margin-top:1rem;">Learn More About Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="why-us">
+  <div class="section-header">
+    <span class="section-label">Why Faciouz Care</span>
+    <h2>The Faciouz Difference</h2>
+    <div class="divider"></div>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🌿</div>
+      <h3>Fresh Ingredients</h3>
+      <p>We source fresh, quality ingredients daily to ensure every dish bursts with authentic flavour.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👩‍🍳</div>
+      <h3>Expert Chefs</h3>
+      <p>Our skilled cooks bring years of Nigerian culinary tradition to every plate they prepare.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏡</div>
+      <h3>Warm Atmosphere</h3>
+      <p>Enjoy a welcoming, family-friendly environment that feels just like home.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Quick Service</h3>
+      <p>We respect your time. Hot, fresh food delivered to your table without unnecessary delays.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Wave: white → green -->
+<div class="wave-divider" style="background:var(--green);">
+  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,60 C480,0 960,60 1440,0 L1440,60 Z" fill="#ffffff"/>
+  </svg>
+</div>
+
+<!-- SERVICES STRIP -->
+<section class="services-strip">
+  <div class="section-label" style="color:rgba(255,255,255,0.7); margin-bottom:0.5rem;">What We Offer</div>
+  <h2>Indoor &amp; Outdoor Services</h2>
+  <p>From daily meals to grand celebrations — we've got you covered at every occasion.</p>
+  <div class="services-tags">
+    <span class="service-tag">🍲 Nigerian Delicacies</span>
+    <span class="service-tag">🎂 Birthday Parties</span>
+    <span class="service-tag">💍 Weddings</span>
+    <span class="service-tag">💞 Anniversaries</span>
+    <span class="service-tag">🎊 Special Occasions</span>
+    <span class="service-tag">🚿 Showers</span>
+    <span class="service-tag">🧁 Pastries &amp; Cakes</span>
+    <span class="service-tag">🥤 Drinks</span>
+    <span class="service-tag">🍿 Snacks</span>
+    <span class="service-tag">🎪 Events Decor</span>
+    <span class="service-tag">👗 Wears</span>
+    <span class="service-tag">💄 Make-up &amp; Rentals</span>
+  </div>
+  <a href="reservations.html" class="btn" style="background:white;color:var(--green);font-weight:800;">Book an Event</a>
+</section>
+
+<!-- Wave: green → light -->
+<div class="wave-divider" style="background:#FFF8F0;">
+  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,0 C480,60 960,0 1440,60 L1440,0 Z" fill="var(--green)"/>
+  </svg>
+</div>
+
+<!-- GALLERY PREVIEW -->
+<section class="gallery-section">
+  <div class="section-header">
+    <span class="section-label">Gallery</span>
+    <h2>A Feast for the Eyes</h2>
+    <div class="divider"></div>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item large g1">🍛<div class="gallery-overlay">👁️</div></div>
+    <div class="gallery-item g2">🥣<div class="gallery-overlay">👁️</div></div>
+    <div class="gallery-item g3">🍲<div class="gallery-overlay">👁️</div></div>
+    <div class="gallery-item g4">🍚<div class="gallery-overlay">👁️</div></div>
+    <div class="gallery-item g5">🍖<div class="gallery-overlay">👁️</div></div>
+  </div>
+  <div class="gallery-cta">
+    <a href="gallery.html" class="btn btn-primary">View Full Gallery</a>
+  </div>
+</section>
+
+<!-- Wave: light → dark (reservation strip) -->
+<div class="wave-divider" style="background:#1a1a1a;">
+  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,60 C480,0 960,60 1440,0 L1440,60 Z" fill="#FFF8F0"/>
+  </svg>
+</div>
+
+<!-- RESERVATION CTA -->
+<section class="reservation-strip">
+  <h2>Ready to Dine with Us?</h2>
+  <p>Reserve your table today and enjoy an unforgettable Nigerian dining experience.</p>
+  <a href="reservations.html" class="btn btn-primary" style="background:var(--orange);">Book a Table</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="Faciouz Care logo.jpeg" alt="Faciouz Care" />
+      <p>Bringing the authentic taste of Nigeria to your table. Every meal is made with love, tradition, and the finest ingredients.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="reservations.html">Reservations</a></li>
+        <li><a href="order.html">Order Online</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>📍 6, Ajose Str., Off PPL Bus Stop, Ota, Ogun State<br/><br/>📞 07069401415 / 08033648400<br/><br/>📧 hello@faciouzcare.com<br/><br/>🕐 Mon–Sun: 9am – 10pm</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 <a href="admin.html" style="text-decoration:none;"><span>Faciouz Care</span></a>. All rights reserved.</p>
+    <p>Made with ❤️ in Nigeria</p>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script>
+(async () => {
+  await FC.init();
+  const grid = document.querySelector('.dishes-grid');
+  if (!grid) return;
+  const items = FC.getMenu().filter(i => i.featured && i.available);
+  if (!items.length) return;
+  grid.innerHTML = items.map(i => `
+    <div class="dish-card">
+      ${i.img ? `<div class="dish-img" style="padding:0;overflow:hidden;"><img src="${i.img}" style="width:100%;height:100%;object-fit:cover;" /></div>` : `<div class="dish-img" style="background:${i.bg}">${i.emoji}</div>`}
+      <div class="dish-body">
+        <h3>${i.name}</h3>
+        <p>${i.desc}</p>
+        <div class="dish-footer">
+          <span class="dish-price">${FC.formatPrice(i.price)}</span>
+          ${i.tag ? `<span class="dish-tag">${i.tag}</span>` : ''}
+        </div>
+      </div>
+    </div>`).join('');
+})();
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>

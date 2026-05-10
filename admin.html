@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin – Faciouz Care</title>
+  <link rel="icon" href="Faciouz Care logo.jpeg" type="image/jpeg" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --orange: #E8650A; --orange-d: #C4520A; --green: #1B6B2F; --green-d: #134D22;
+      --dark: #1a1a1a; --dark2: #252525; --dark3: #2e2e2e;
+      --sidebar: 240px;
+      --radius: 10px;
+      --shadow: 0 2px 12px rgba(0,0,0,.08);
+      --border: rgba(0,0,0,.08);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Segoe UI',system-ui,sans-serif; background:#f5f6fa; color:#1a1a1a; }
+
+    /* ── LOGIN ── */
+    #login-screen {
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(135deg,#1a1a1a 0%,#2c1a0a 55%,#1B6B2F 100%);
+    }
+    .login-box {
+      background:#fff; border-radius:16px; padding:2.5rem 2rem;
+      width:100%; max-width:380px; box-shadow:0 20px 60px rgba(0,0,0,.3); text-align:center;
+    }
+    .login-box img { width:72px; height:72px; border-radius:50%; object-fit:contain; border:3px solid var(--orange); margin-bottom:1rem; }
+    .login-box h2 { font-size:1.3rem; font-weight:800; margin-bottom:.25rem; }
+    .login-box p { color:#888; font-size:.85rem; margin-bottom:1.75rem; }
+    .login-box input {
+      width:100%; padding:.75rem 1rem; border:1.5px solid rgba(0,0,0,.12); border-radius:8px;
+      font-size:.95rem; font-family:inherit; outline:none; margin-bottom:.75rem;
+    }
+    .login-box input:focus { border-color:var(--orange); }
+    .login-box button {
+      width:100%; padding:.8rem; background:var(--orange); color:#fff; border:none;
+      border-radius:8px; font-size:1rem; font-weight:700; cursor:pointer; transition:.2s;
+    }
+    .login-box button:hover { background:var(--orange-d); }
+    .login-error { color:#e00; font-size:.82rem; margin-top:.5rem; display:none; }
+
+    /* ── APP SHELL ── */
+    #app { display:none; min-height:100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position:fixed; top:0; left:0; bottom:0; width:var(--sidebar);
+      background:var(--dark); display:flex; flex-direction:column; z-index:100;
+    }
+    .sidebar-brand {
+      padding:1.25rem 1rem; display:flex; align-items:center; gap:.75rem;
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+    .sidebar-brand img { width:38px; height:38px; border-radius:50%; border:2px solid var(--orange); }
+    .sidebar-brand span { color:#fff; font-size:.95rem; font-weight:700; line-height:1.2; }
+    .sidebar-brand small { color:#888; font-size:.72rem; display:block; }
+
+    nav.sidebar-nav { flex:1; padding:.75rem 0; overflow-y:auto; }
+    .nav-section { padding:.5rem 1rem .25rem; font-size:.68rem; color:#666; text-transform:uppercase; letter-spacing:1.2px; font-weight:700; }
+    .sidebar-nav a {
+      display:flex; align-items:center; gap:.75rem; padding:.65rem 1rem;
+      color:#aaa; text-decoration:none; font-size:.88rem; font-weight:500;
+      transition:.2s; cursor:pointer; border:none; background:none; width:100%;
+    }
+    .sidebar-nav a:hover { color:#fff; background:rgba(255,255,255,.05); }
+    .sidebar-nav a.active { color:var(--orange); background:rgba(232,101,10,.12); border-right:3px solid var(--orange); }
+    .sidebar-nav a .nav-icon { font-size:1rem; width:20px; text-align:center; }
+    .sidebar-nav a .badge {
+      margin-left:auto; background:var(--orange); color:#fff;
+      font-size:.68rem; font-weight:700; border-radius:100px; padding:.1rem .45rem; min-width:18px; text-align:center;
+    }
+
+    .sidebar-footer {
+      padding:1rem; border-top:1px solid rgba(255,255,255,.07);
+    }
+    .sidebar-footer a {
+      display:flex; align-items:center; gap:.6rem; color:#888; font-size:.82rem;
+      text-decoration:none; cursor:pointer;
+    }
+    .sidebar-footer a:hover { color:#fff; }
+
+    /* ── MAIN ── */
+    .main { margin-left:var(--sidebar); min-height:100vh; display:flex; flex-direction:column; }
+
+    .topbar {
+      background:#fff; border-bottom:1px solid var(--border); padding:.85rem 1.75rem;
+      display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50;
+    }
+    .topbar h1 { font-size:1.15rem; font-weight:800; }
+    .topbar-right { display:flex; align-items:center; gap:1rem; font-size:.85rem; color:#888; }
+    .topbar-right a { color:var(--orange); text-decoration:none; font-weight:600; }
+
+    .content { padding:1.75rem; flex:1; }
+
+    /* ── CARDS ── */
+    .stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1rem; margin-bottom:2rem; }
+    .stat-card {
+      background:#fff; border-radius:var(--radius); padding:1.25rem 1.5rem;
+      box-shadow:var(--shadow); border-left:4px solid var(--orange);
+    }
+    .stat-card.green { border-color:var(--green); }
+    .stat-card.blue { border-color:#2D6B9B; }
+    .stat-card.purple { border-color:#6B2D9B; }
+    .stat-num { font-size:2rem; font-weight:800; line-height:1; }
+    .stat-label { font-size:.78rem; color:#888; margin-top:.3rem; }
+
+    /* ── PANELS ── */
+    .view { display:none; }
+    .view.active { display:block; }
+
+    .card {
+      background:#fff; border-radius:var(--radius); box-shadow:var(--shadow);
+      overflow:hidden; margin-bottom:1.5rem;
+    }
+    .card-header {
+      padding:1rem 1.5rem; border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .card-header h3 { font-size:.95rem; font-weight:700; }
+    .card-body { padding:1.5rem; }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:.85rem; }
+    th { text-align:left; padding:.65rem 1rem; background:#f9f9f9; font-size:.75rem; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:.5px; border-bottom:1px solid var(--border); }
+    td { padding:.75rem 1rem; border-bottom:1px solid var(--border); vertical-align:middle; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:#fafafa; }
+
+    .pill {
+      display:inline-block; padding:.2rem .65rem; border-radius:100px;
+      font-size:.72rem; font-weight:700;
+    }
+    .pill-green { background:rgba(27,107,47,.12); color:var(--green); }
+    .pill-orange { background:rgba(232,101,10,.12); color:var(--orange-d); }
+    .pill-gray { background:rgba(0,0,0,.06); color:#666; }
+    .pill-blue { background:rgba(45,107,155,.12); color:#2D6B9B; }
+    .pill-red { background:rgba(180,0,0,.1); color:#b40000; }
+
+    /* ── BUTTONS ── */
+    .btn { display:inline-flex; align-items:center; gap:.4rem; padding:.5rem 1rem; border-radius:7px; font-size:.85rem; font-weight:600; cursor:pointer; border:none; transition:.2s; text-decoration:none; }
+    .btn-primary { background:var(--orange); color:#fff; }
+    .btn-primary:hover { background:var(--orange-d); }
+    .btn-green { background:var(--green); color:#fff; }
+    .btn-green:hover { background:var(--green-d); }
+    .btn-ghost { background:transparent; border:1.5px solid var(--border); color:#555; }
+    .btn-ghost:hover { border-color:#aaa; color:#1a1a1a; }
+    .btn-danger { background:transparent; border:1.5px solid #fcc; color:#c00; }
+    .btn-danger:hover { background:#fee; }
+    .btn-sm { padding:.35rem .7rem; font-size:.78rem; }
+    .btn-icon { padding:.4rem; border-radius:6px; }
+
+    /* ── TOGGLE ── */
+    .toggle { position:relative; display:inline-block; width:38px; height:22px; }
+    .toggle input { opacity:0; width:0; height:0; }
+    .toggle-slider {
+      position:absolute; inset:0; border-radius:100px;
+      background:#ccc; cursor:pointer; transition:.2s;
+    }
+    .toggle-slider::before {
+      content:''; position:absolute; width:16px; height:16px; border-radius:50%;
+      background:#fff; left:3px; top:3px; transition:.2s;
+    }
+    .toggle input:checked + .toggle-slider { background:var(--green); }
+    .toggle input:checked + .toggle-slider::before { transform:translateX(16px); }
+
+    /* ── FORMS ── */
+    .form-group { margin-bottom:1rem; }
+    .form-group label { display:block; font-size:.8rem; font-weight:700; margin-bottom:.35rem; color:#555; }
+    .form-group input, .form-group select, .form-group textarea {
+      width:100%; padding:.65rem .9rem; border:1.5px solid rgba(0,0,0,.1); border-radius:7px;
+      font-size:.88rem; font-family:inherit; outline:none; transition:.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(232,101,10,.08); }
+    .form-group textarea { resize:vertical; min-height:80px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .form-row-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; }
+
+    /* ── MODAL ── */
+    .modal-backdrop {
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,.5);
+      z-index:1000; align-items:center; justify-content:center; padding:1rem;
+    }
+    .modal-backdrop.open { display:flex; }
+    .modal {
+      background:#fff; border-radius:14px; width:100%; max-width:560px;
+      max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.25);
+    }
+    .modal-header {
+      padding:1.25rem 1.5rem; border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:#fff;
+    }
+    .modal-header h3 { font-size:1rem; font-weight:800; }
+    .modal-close { background:none; border:none; font-size:1.4rem; cursor:pointer; color:#888; line-height:1; transition:.2s; }
+    .modal-close:hover { color:#1a1a1a; }
+    .modal-body { padding:1.5rem; }
+    .modal-footer { padding:1rem 1.5rem; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:.75rem; }
+
+    /* ── SEARCH / FILTER ── */
+    .toolbar { display:flex; align-items:center; gap:.75rem; margin-bottom:1.25rem; flex-wrap:wrap; }
+    .search-input {
+      flex:1; min-width:200px; padding:.55rem .9rem; border:1.5px solid rgba(0,0,0,.1); border-radius:7px;
+      font-size:.88rem; font-family:inherit; outline:none;
+    }
+    .search-input:focus { border-color:var(--orange); }
+    .filter-select {
+      padding:.55rem .9rem; border:1.5px solid rgba(0,0,0,.1); border-radius:7px;
+      font-size:.85rem; font-family:inherit; outline:none; cursor:pointer;
+    }
+
+    /* ── DISH IMAGE PREVIEW ── */
+    .emoji-preview {
+      width:64px; height:64px; border-radius:8px; display:flex; align-items:center;
+      justify-content:center; font-size:2rem; flex-shrink:0;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position:fixed; bottom:2rem; right:2rem; background:var(--dark); color:#fff;
+      padding:.75rem 1.25rem; border-radius:8px; font-size:.88rem; font-weight:600;
+      box-shadow:0 8px 24px rgba(0,0,0,.2); transform:translateY(80px); opacity:0;
+      transition:all .3s ease; z-index:9999; max-width:320px;
+      display:flex; align-items:center; gap:.5rem;
+    }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .toast.success { border-left:4px solid var(--green); }
+    .toast.error { border-left:4px solid #e00; }
+
+    /* ── INFO FORM ── */
+    .info-section { margin-bottom:2rem; }
+    .info-section h4 { font-size:.9rem; font-weight:700; margin-bottom:1rem; color:#555; text-transform:uppercase; letter-spacing:.5px; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state { text-align:center; padding:3rem 1rem; color:#aaa; }
+    .empty-state .ei { font-size:3rem; margin-bottom:.75rem; }
+    .empty-state p { font-size:.88rem; }
+
+    /* ── STATUS ACTIONS ── */
+    .action-group { display:flex; gap:.4rem; align-items:center; }
+
+    @media(max-width:768px) {
+      :root { --sidebar:0px; }
+      .sidebar { transform:translateX(-240px); transition:.3s; width:240px; }
+      .sidebar.open { transform:translateX(0); }
+      .main { margin-left:0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login-screen">
+  <div class="login-box">
+    <img src="Faciouz Care logo.jpeg" alt="Logo" />
+    <h2>Admin Portal</h2>
+    <p>Faciouz Care — Restaurant Management</p>
+    <input type="password" id="pw-input" placeholder="Enter password" />
+    <button onclick="doLogin()">Sign In</button>
+    <p class="login-error" id="login-error">Incorrect password. Please try again.</p>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="Faciouz Care logo.jpeg" alt="Logo" />
+      <span>Faciouz Care <small>Admin</small></span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">Overview</div>
+      <a onclick="showView('dashboard')" class="active" id="nav-dashboard">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a onclick="showView('analytics')" id="nav-analytics">
+        <span class="nav-icon">📈</span> Analytics
+      </a>
+
+      <div class="nav-section">Content</div>
+      <a onclick="showView('menu')" id="nav-menu">
+        <span class="nav-icon">🍽️</span> Menu Items
+      </a>
+      <a onclick="showView('info')" id="nav-info">
+        <span class="nav-icon">🏪</span> Restaurant Info
+      </a>
+      <a onclick="showView('gallery')" id="nav-gallery">
+        <span class="nav-icon">📸</span> Gallery
+      </a>
+
+      <div class="nav-section">Inbox</div>
+      <a onclick="showView('reservations')" id="nav-reservations">
+        <span class="nav-icon">📅</span> Reservations
+        <span class="badge" id="badge-res" style="display:none">0</span>
+      </a>
+      <a onclick="showView('orders')" id="nav-orders">
+        <span class="nav-icon">📦</span> Orders
+        <span class="badge" id="badge-orders" style="display:none">0</span>
+      </a>
+      <a onclick="showView('messages')" id="nav-messages">
+        <span class="nav-icon">✉️</span> Messages
+        <span class="badge" id="badge-msg" style="display:none">0</span>
+      </a>
+
+      <a onclick="showView('reviews')" id="nav-reviews">
+        <span class="nav-icon">⭐</span> Reviews
+        <span class="badge" id="badge-reviews" style="display:none">0</span>
+      </a>
+
+      <div class="nav-section">Account</div>
+      <a onclick="showView('settings')" id="nav-settings">
+        <span class="nav-icon">⚙️</span> Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a onclick="doLogout()">🚪 Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <h1 id="topbar-title">Dashboard</h1>
+      <div class="topbar-right">
+        <span id="topbar-date"></span>
+        <a href="index.html" target="_blank">View Site →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ─── DASHBOARD ─── -->
+      <div class="view active" id="view-dashboard">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-num" id="stat-items">0</div>
+            <div class="stat-label">Menu Items</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-num" id="stat-res">0</div>
+            <div class="stat-label">Reservations</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-num" id="stat-orders">0</div>
+            <div class="stat-label">Orders</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-num" id="stat-msg">0</div>
+            <div class="stat-label">Messages</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+          <div class="card">
+            <div class="card-header"><h3>Recent Reservations</h3><a onclick="showView('reservations')" class="btn btn-ghost btn-sm">View All</a></div>
+            <div class="card-body" id="dash-reservations"><div class="empty-state"><div class="ei">📅</div><p>No reservations yet</p></div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Recent Orders</h3><a onclick="showView('orders')" class="btn btn-ghost btn-sm">View All</a></div>
+            <div class="card-body" id="dash-orders"><div class="empty-state"><div class="ei">📦</div><p>No orders yet</p></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── MENU ─── -->
+      <div class="view" id="view-menu">
+        <div class="card">
+          <div class="card-header">
+            <h3>Menu Items</h3>
+            <div style="display:flex;gap:.75rem;">
+              <button class="btn btn-ghost btn-sm" onclick="resetMenu()">Reset to Defaults</button>
+              <button class="btn btn-primary btn-sm" onclick="openAddDish()">+ Add Item</button>
+            </div>
+          </div>
+          <div class="card-body" style="padding-bottom:0;">
+            <div class="toolbar">
+              <input class="search-input" id="menu-search" placeholder="Search dishes..." oninput="filterMenu()" />
+              <select class="filter-select" id="menu-cat-filter" onchange="filterMenu()">
+                <option value="">All Categories</option>
+                <option value="swallows">Swallows</option>
+                <option value="rice">Rice Dishes</option>
+                <option value="soups">Soups</option>
+                <option value="protein">Protein</option>
+                <option value="drinks">Drinks</option>
+                <option value="extras">Extras</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Tag</th>
+                  <th>Featured</th>
+                  <th>Available</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="menu-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── INFO ─── -->
+      <div class="view" id="view-info">
+        <form id="info-form" onsubmit="saveInfo(event)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+            <div>
+              <div class="card">
+                <div class="card-header"><h3>Basic Information</h3></div>
+                <div class="card-body">
+                  <div class="form-group"><label>Restaurant Name</label><input id="i-name" /></div>
+                  <div class="form-group"><label>Tagline</label><input id="i-tagline" /></div>
+                  <div class="form-group"><label>Phone Number</label><input id="i-phone" /></div>
+                  <div class="form-group"><label>Email Address</label><input id="i-email" type="email" /></div>
+                  <div class="form-group"><label>Address</label><input id="i-address" /></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header"><h3>Social Media</h3></div>
+                <div class="card-body">
+                  <div class="form-group"><label>Instagram URL</label><input id="i-instagram" placeholder="https://instagram.com/..." /></div>
+                  <div class="form-group"><label>Facebook URL</label><input id="i-facebook" placeholder="https://facebook.com/..." /></div>
+                  <div class="form-group"><label>Twitter / X URL</label><input id="i-twitter" placeholder="https://twitter.com/..." /></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header"><h3>Ordering</h3></div>
+                <div class="card-body">
+                  <div class="form-row">
+                    <div class="form-group"><label>Delivery Fee (₦)</label><input id="i-delivery-fee" type="number" /></div>
+                    <div class="form-group"><label>Min Order (₦)</label><input id="i-min-order" type="number" /></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-header"><h3>Opening Hours</h3></div>
+                <div class="card-body">
+                  <div class="form-group"><label>Monday – Friday</label><input id="i-weekday" /></div>
+                  <div class="form-group"><label>Saturday</label><input id="i-saturday" /></div>
+                  <div class="form-group"><label>Sunday</label><input id="i-sunday" /></div>
+                  <div class="form-group"><label>Public Holidays</label><input id="i-holiday" /></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:right;margin-top:.5rem;">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ─── RESERVATIONS ─── -->
+      <div class="view" id="view-reservations">
+        <div class="card">
+          <div class="card-header">
+            <h3>Reservations</h3>
+            <div class="action-group">
+              <select class="filter-select" id="res-filter" onchange="renderReservations()">
+                <option value="">All</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Guest</th><th>Date & Time</th><th>Guests</th><th>Occasion</th><th>Status</th><th>Received</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="res-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── ORDERS ─── -->
+      <div class="view" id="view-orders">
+        <div class="card">
+          <div class="card-header">
+            <h3>Online Orders</h3>
+            <select class="filter-select" id="order-filter" onchange="renderOrders()">
+              <option value="">All</option>
+              <option value="new">New</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="ready">Ready</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Order #</th><th>Type</th><th>Items</th><th>Total</th><th>Status</th><th>Time</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="orders-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── MESSAGES ─── -->
+      <div class="view" id="view-messages">
+        <div class="card">
+          <div class="card-header">
+            <h3>Contact Messages</h3>
+            <select class="filter-select" id="msg-filter" onchange="renderMessages()">
+              <option value="">All</option>
+              <option value="unread">Unread</option>
+              <option value="read">Read</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Status</th><th>Received</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="msg-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── SETTINGS ─── -->
+      <div class="view" id="view-settings">
+        <div style="max-width:480px;">
+          <div class="card">
+            <div class="card-header"><h3>Change Password</h3></div>
+            <div class="card-body">
+              <form onsubmit="changePassword(event)">
+                <div class="form-group"><label>Current Password</label><input type="password" id="s-current" /></div>
+                <div class="form-group"><label>New Password</label><input type="password" id="s-new" /></div>
+                <div class="form-group"><label>Confirm New Password</label><input type="password" id="s-confirm" /></div>
+                <button type="submit" class="btn btn-primary">Update Password</button>
+              </form>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Data Management</h3></div>
+            <div class="card-body">
+              <p style="font-size:.88rem;color:#666;margin-bottom:1rem;">All data is stored securely in your Supabase cloud database. Use the buttons below to export or clear inbox data.</p>
+              <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+                <button class="btn btn-ghost" onclick="exportData()">📥 Export Data</button>
+                <button class="btn btn-danger" onclick="clearInbox()">🗑️ Clear Inbox</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── REVIEWS ─── -->
+      <div class="view" id="view-reviews">
+        <div class="card">
+          <div class="card-header">
+            <h3>Customer Reviews</h3>
+            <select class="filter-select" id="reviews-filter" onchange="renderReviews()">
+              <option value="">All Dishes</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Customer</th><th>Dish</th><th>Rating</th><th>Comment</th><th>Date</th><th>Action</th></tr>
+              </thead>
+              <tbody id="reviews-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── ANALYTICS ─── -->
+      <div class="view" id="view-analytics">
+        <div class="stat-grid" id="analytics-stats">
+          <div class="stat-card green">
+            <div class="stat-num" id="an-revenue">₦0</div>
+            <div class="stat-label">Total Revenue</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-num" id="an-week">₦0</div>
+            <div class="stat-label">This Week</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="an-avg">₦0</div>
+            <div class="stat-label">Avg Order Value</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-num" id="an-count">0</div>
+            <div class="stat-label">Total Orders</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:1.5rem;">
+          <div class="card">
+            <div class="card-header"><h3>Revenue — Last 7 Days</h3></div>
+            <div class="card-body"><canvas id="revenue-chart" height="200"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Top Dishes</h3></div>
+            <div class="card-body" id="top-dishes-list">
+              <div class="empty-state"><div class="ei">📊</div><p>No orders yet</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── GALLERY ─── -->
+      <div class="view" id="view-gallery">
+        <div class="card" style="margin-bottom:1.5rem;">
+          <div class="card-header">
+            <h3>Gallery Photos</h3>
+            <label for="gal-file-input" class="btn btn-primary btn-sm" style="cursor:pointer;">📷 Upload Photo</label>
+            <input type="file" id="gal-file-input" accept="image/*" style="display:none;" onchange="uploadGalleryPhoto(this)" />
+          </div>
+          <div class="card-body">
+            <div id="gal-upload-progress" style="display:none;font-size:.85rem;color:var(--orange);margin-bottom:1rem;">Uploading…</div>
+            <div id="gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;">
+              <div class="empty-state" style="grid-column:1/-1;"><div class="ei">📸</div><p>No photos yet. Upload one to get started.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ─── DISH MODAL ─── -->
+<div class="modal-backdrop" id="dish-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Add Menu Item</h3>
+      <button class="modal-close" onclick="closeModal('dish-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;">
+        <div class="emoji-preview" id="modal-emoji-preview" style="background:#f0f0f0;overflow:hidden;">🍽️</div>
+        <div style="flex:1;">
+          <div class="form-group" style="margin-bottom:.75rem;">
+            <label>Photo <span style="font-weight:400;color:#aaa;">(upload from gallery or paste a link)</span></label>
+            <div style="display:flex;gap:.5rem;align-items:center;">
+              <input id="d-img" placeholder="https://example.com/photo.jpg" oninput="updateEmojiPreview()" style="flex:1;" />
+              <label for="d-img-file" style="cursor:pointer;white-space:nowrap;padding:.5rem .9rem;background:var(--orange);color:white;border-radius:8px;font-size:.82rem;font-weight:700;flex-shrink:0;">📷 Choose Photo</label>
+              <input type="file" id="d-img-file" accept="image/*" style="display:none;" onchange="handlePhotoUpload(this)" />
+            </div>
+            <div id="d-img-progress" style="display:none;font-size:.78rem;color:var(--orange);margin-top:.3rem;">Compressing photo…</div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Emoji Icon <span style="font-weight:400;color:#aaa;">(fallback)</span></label>
+              <input id="d-emoji" value="🍽️" oninput="updateEmojiPreview()" style="font-size:1.3rem;" />
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Background Gradient</label>
+              <input id="d-bg" value="linear-gradient(135deg,#3D1A00,#6B3200)" placeholder="CSS gradient" oninput="updateEmojiPreview()" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group"><label>Item Name *</label><input id="d-name" placeholder="e.g. Amala" /></div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="d-category">
+            <option value="swallows">Swallows</option>
+            <option value="rice">Rice Dishes</option>
+            <option value="soups">Soups</option>
+            <option value="protein">Protein</option>
+            <option value="drinks">Drinks</option>
+            <option value="extras">Extras</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group"><label>Description</label><textarea id="d-desc" placeholder="Brief description of the dish..."></textarea></div>
+
+      <div class="form-row">
+        <div class="form-group"><label>Price (₦) *</label><input id="d-price" type="number" placeholder="e.g. 2000" /></div>
+        <div class="form-group"><label>Badge / Tag</label><input id="d-tag" placeholder="e.g. Best Seller, Popular" /></div>
+      </div>
+
+      <div style="display:flex;gap:2rem;margin-top:.5rem;">
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:600;cursor:pointer;">
+          <input type="checkbox" id="d-featured" /> Show on Homepage
+        </label>
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:600;cursor:pointer;">
+          <input type="checkbox" id="d-available" checked /> Available
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('dish-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveDish()">Save Item</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST ─── -->
+<div class="toast" id="toast"></div>
+
+<script src="js/data.js"></script>
+<script>
+/* ── Auth ── */
+function doLogin() {
+  const pw = document.getElementById('pw-input').value;
+  if (FC.login(pw)) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function doLogout() { FC.logout(); location.href = 'index.html'; }
+
+async function changePassword(e) {
+  e.preventDefault();
+  const cur = document.getElementById('s-current').value;
+  const nw = document.getElementById('s-new').value;
+  const conf = document.getElementById('s-confirm').value;
+  if (cur !== FC.getPassword()) return toast('Current password is incorrect.', 'error');
+  if (!nw) return toast('New password cannot be empty.', 'error');
+  if (nw !== conf) return toast('Passwords do not match.', 'error');
+  await FC.setPassword(nw);
+  toast('Password updated successfully.', 'success');
+  e.target.reset();
+}
+
+/* ── Init ── */
+function initApp() {
+  document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-NG', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+  updateBadges();
+  renderDashboard();
+  renderMenuTable();
+  loadInfoForm();
+
+  FC.subscribeToInbox({
+    onOrder: o => {
+      toast(`🛒 New order — ${FC.formatPrice(o.total)}`, 'success');
+      updateBadges();
+      if (_currentView === 'orders') renderOrders();
+      if (_currentView === 'dashboard') renderDashboard();
+    },
+    onReservation: r => {
+      toast(`📅 New reservation from ${r.name}`, 'success');
+      updateBadges();
+      if (_currentView === 'reservations') renderReservations();
+      if (_currentView === 'dashboard') renderDashboard();
+    },
+    onMessage: m => {
+      toast(`✉️ New message from ${m.name}`, 'success');
+      updateBadges();
+      if (_currentView === 'messages') renderMessages();
+    },
+  });
+}
+
+/* ── Badges ── */
+async function updateBadges() {
+  const [res, orders, msgs] = await Promise.all([
+    FC.getReservations(), FC.getOrders(), FC.getMessages()
+  ]);
+  setBadge('badge-res', res.filter(r => r.status === 'pending').length);
+  setBadge('badge-orders', orders.filter(o => o.status === 'new').length);
+  setBadge('badge-msg', msgs.filter(m => !m.read).length);
+  document.getElementById('stat-items').textContent = FC.getMenu().length;
+  document.getElementById('stat-res').textContent = res.length;
+  document.getElementById('stat-orders').textContent = orders.length;
+  document.getElementById('stat-msg').textContent = msgs.length;
+}
+
+function setBadge(id, n) {
+  const el = document.getElementById(id);
+  el.textContent = n;
+  el.style.display = n > 0 ? '' : 'none';
+}
+
+/* ── Navigation ── */
+const VIEWS = ['dashboard', 'analytics', 'menu', 'info', 'gallery', 'reservations', 'orders', 'messages', 'reviews', 'settings'];
+const TITLES = { dashboard: 'Dashboard', analytics: 'Analytics', menu: 'Menu Items', info: 'Restaurant Info', gallery: 'Gallery', reservations: 'Reservations', orders: 'Orders', messages: 'Messages', reviews: 'Customer Reviews', settings: 'Settings' };
+let _currentView = 'dashboard';
+
+function showView(name) {
+  _currentView = name;
+  VIEWS.forEach(v => {
+    document.getElementById('view-' + v).classList.toggle('active', v === name);
+    document.getElementById('nav-' + v).classList.toggle('active', v === name);
+  });
+  document.getElementById('topbar-title').textContent = TITLES[name];
+  if (name === 'reservations') renderReservations();
+  if (name === 'orders') renderOrders();
+  if (name === 'messages') renderMessages();
+  if (name === 'analytics') renderAnalytics();
+  if (name === 'gallery') renderGallery();
+  if (name === 'reviews') renderReviews();
+}
+
+/* ── Dashboard ── */
+async function renderDashboard() {
+  await updateBadges();
+  const [res, orders] = await Promise.all([FC.getReservations(), FC.getOrders()]);
+
+  const dashRes = document.getElementById('dash-reservations');
+  const recent5res = res.slice(0, 5);
+  dashRes.innerHTML = recent5res.length === 0
+    ? '<div class="empty-state"><div class="ei">📅</div><p>No reservations yet</p></div>'
+    : recent5res.map(r => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.85rem;">
+        <div><strong>${r.name}</strong><br/><span style="color:#888;">${r.date} at ${r.time}</span></div>
+        <span class="pill ${statusPill('res', r.status)}">${r.status}</span>
+      </div>`).join('');
+
+  const dashOrders = document.getElementById('dash-orders');
+  const recent5ord = orders.slice(0, 5);
+  dashOrders.innerHTML = recent5ord.length === 0
+    ? '<div class="empty-state"><div class="ei">📦</div><p>No orders yet</p></div>'
+    : recent5ord.map(o => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.85rem;">
+        <div><strong>#${String(o.id).slice(-5)}</strong> ${o.mode === 'delivery' ? '🚴' : '🏃'}<br/><span style="color:#888;">${FC.formatPrice(o.total)}</span></div>
+        <span class="pill ${statusPill('order', o.status)}">${o.status}</span>
+      </div>`).join('');
+}
+
+/* ── Reviews ── */
+async function renderReviews() {
+  const filter = document.getElementById('reviews-filter').value;
+  const reviews = await FC.getReviews(filter || null);
+
+  // Populate dish filter if empty
+  const filterSel = document.getElementById('reviews-filter');
+  if (filterSel.options.length === 1) {
+    FC.getMenu().forEach(i => {
+      const opt = document.createElement('option');
+      opt.value = i.name; opt.textContent = i.name;
+      filterSel.appendChild(opt);
+    });
+  }
+
+  const tbody = document.getElementById('reviews-table-body');
+  if (reviews.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="ei">⭐</div><p>No reviews yet</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = reviews.map(r => `
+    <tr>
+      <td><strong>${r.name}</strong></td>
+      <td>${r.dish}</td>
+      <td style="color:#E8650A;font-size:1.1rem;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</td>
+      <td style="max-width:260px;font-size:.82rem;color:#555;">${r.comment || '—'}</td>
+      <td style="font-size:.78rem;color:#888;">${FC.formatDate(r.created_at)}</td>
+      <td><button class="btn btn-danger btn-sm btn-icon" onclick="deleteReview(${r.id})" title="Delete">🗑️</button></td>
+    </tr>`).join('');
+
+  const badge = document.getElementById('badge-reviews');
+  badge.textContent = reviews.length;
+  badge.style.display = reviews.length > 0 ? '' : 'none';
+}
+
+async function deleteReview(id) {
+  if (!confirm('Delete this review?')) return;
+  await FC.deleteReview(id);
+  renderReviews();
+  toast('Review deleted.', 'success');
+}
+
+/* ── Analytics ── */
+let _revenueChart = null;
+async function renderAnalytics() {
+  const orders = await FC.getOrders();
+  const now = new Date();
+  const weekAgo = new Date(now - 7 * 86400000);
+
+  const totalRevenue = orders.reduce((s, o) => s + (o.total || 0), 0);
+  const weekRevenue = orders.filter(o => new Date(o.created_at) >= weekAgo).reduce((s, o) => s + (o.total || 0), 0);
+  const avgOrder = orders.length ? Math.round(totalRevenue / orders.length) : 0;
+
+  document.getElementById('an-revenue').textContent = FC.formatPrice(totalRevenue);
+  document.getElementById('an-week').textContent = FC.formatPrice(weekRevenue);
+  document.getElementById('an-avg').textContent = FC.formatPrice(avgOrder);
+  document.getElementById('an-count').textContent = orders.length;
+
+  // Top dishes
+  const dishQty = {};
+  orders.forEach(o => {
+    (o.items || []).forEach(item => {
+      dishQty[item.name] = (dishQty[item.name] || 0) + (item.qty || 1);
+    });
+  });
+  const top = Object.entries(dishQty).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  const topEl = document.getElementById('top-dishes-list');
+  if (top.length === 0) {
+    topEl.innerHTML = '<div class="empty-state"><div class="ei">📊</div><p>No orders yet</p></div>';
+  } else {
+    const max = top[0][1];
+    topEl.innerHTML = top.map(([name, qty]) => `
+      <div style="margin-bottom:.85rem;">
+        <div style="display:flex;justify-content:space-between;font-size:.83rem;font-weight:600;margin-bottom:.3rem;">
+          <span>${name}</span><span style="color:var(--orange);">${qty} sold</span>
+        </div>
+        <div style="background:#f0f0f0;border-radius:100px;height:7px;overflow:hidden;">
+          <div style="background:var(--orange);height:100%;width:${Math.round(qty/max*100)}%;border-radius:100px;transition:.4s;"></div>
+        </div>
+      </div>`).join('');
+  }
+
+  // Revenue chart (last 7 days)
+  const labels = [];
+  const values = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now - i * 86400000);
+    const key = d.toISOString().slice(0, 10);
+    labels.push(d.toLocaleDateString('en-NG', { weekday: 'short', day: 'numeric' }));
+    values.push(orders.filter(o => o.created_at && o.created_at.slice(0, 10) === key).reduce((s, o) => s + (o.total || 0), 0));
+  }
+  const ctx = document.getElementById('revenue-chart').getContext('2d');
+  if (_revenueChart) _revenueChart.destroy();
+  _revenueChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{ label: 'Revenue (₦)', data: values, backgroundColor: 'rgba(232,101,10,0.75)', borderRadius: 6 }],
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { callback: v => '₦' + v.toLocaleString() } } },
+    },
+  });
+}
+
+/* ── Gallery management ── */
+async function renderGallery() {
+  const photos = await FC.getGalleryPhotos();
+  const grid = document.getElementById('gallery-grid');
+  if (photos.length === 0) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><div class="ei">📸</div><p>No photos yet. Upload one to get started.</p></div>';
+    return;
+  }
+  grid.innerHTML = photos.map(p => `
+    <div style="position:relative;border-radius:var(--radius);overflow:hidden;background:#f0f0f0;aspect-ratio:1;">
+      <img src="${p.url}" alt="${p.caption||''}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+      <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.7));padding:.5rem .6rem .4rem;">
+        <p style="color:#fff;font-size:.72rem;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.caption||'No caption'}</p>
+      </div>
+      <button onclick="deleteGalleryPhoto(${p.id})" style="position:absolute;top:.4rem;right:.4rem;background:rgba(0,0,0,.55);border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;color:#fff;font-size:.85rem;display:flex;align-items:center;justify-content:center;line-height:1;" title="Delete">✕</button>
+    </div>`).join('');
+}
+
+async function uploadGalleryPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const progress = document.getElementById('gal-upload-progress');
+  progress.textContent = 'Uploading photo…';
+  progress.style.display = 'block';
+  const caption = prompt('Add a caption for this photo (optional):') || '';
+  try {
+    const url = await FC.uploadFile(file, 'gallery');
+    await FC.addGalleryPhoto(url, caption);
+    progress.style.display = 'none';
+    input.value = '';
+    renderGallery();
+    toast('Photo uploaded successfully.', 'success');
+  } catch (err) {
+    progress.textContent = 'Upload failed — check your connection and try again.';
+    console.error(err);
+  }
+}
+
+async function deleteGalleryPhoto(id) {
+  if (!confirm('Delete this photo from the gallery?')) return;
+  await FC.deleteGalleryPhoto(id);
+  renderGallery();
+  toast('Photo deleted.', 'success');
+}
+
+/* ── Menu ── */
+let editingDishId = null;
+
+function renderMenuTable() {
+  const search = (document.getElementById('menu-search')?.value || '').toLowerCase();
+  const cat = document.getElementById('menu-cat-filter')?.value || '';
+  const items = FC.getMenu().filter(i => {
+    const matchCat = !cat || i.category === cat;
+    const matchSearch = !search || i.name.toLowerCase().includes(search) || i.desc.toLowerCase().includes(search);
+    return matchCat && matchSearch;
+  });
+
+  const catLabel = { swallows: 'Swallows', rice: 'Rice Dishes', soups: 'Soups', protein: 'Protein', drinks: 'Drinks', extras: 'Extras' };
+  const tbody = document.getElementById('menu-table-body');
+
+  if (items.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#aaa;">No items found</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = items.map(i => `
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <div class="emoji-preview" style="background:${i.bg};width:40px;height:40px;font-size:1.4rem;border-radius:7px;overflow:hidden;">
+            ${i.img ? `<img src="${i.img}" style="width:100%;height:100%;object-fit:cover;" />` : i.emoji}
+          </div>
+          <div>
+            <div style="font-weight:700;font-size:.88rem;">${i.name}</div>
+            <div style="font-size:.75rem;color:#888;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${i.desc}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="pill pill-blue">${catLabel[i.category] || i.category}</span></td>
+      <td style="font-weight:700;color:var(--orange);">${FC.formatPrice(i.price)}</td>
+      <td>${i.tag ? `<span class="pill pill-orange">${i.tag}</span>` : '<span style="color:#ccc">—</span>'}</td>
+      <td>
+        <label class="toggle">
+          <input type="checkbox" ${i.featured ? 'checked' : ''} onchange="toggleField(${i.id},'featured',this.checked)" />
+          <span class="toggle-slider"></span>
+        </label>
+      </td>
+      <td>
+        <label class="toggle">
+          <input type="checkbox" ${i.available ? 'checked' : ''} onchange="toggleField(${i.id},'available',this.checked)" />
+          <span class="toggle-slider"></span>
+        </label>
+      </td>
+      <td>
+        <div class="action-group">
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="openEditDish(${i.id})" title="Edit">✏️</button>
+          <button class="btn btn-danger btn-sm btn-icon" onclick="deleteDish(${i.id})" title="Delete">🗑️</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function filterMenu() { renderMenuTable(); }
+
+async function toggleField(id, field, val) {
+  const item = FC.getMenu().find(i => i.id === id);
+  if (!item) return;
+  await FC.updateMenuItem(id, { [field]: val });
+  toast(`Updated ${field} for "${item.name}"`, 'success');
+}
+
+function openAddDish() {
+  editingDishId = null;
+  document.getElementById('modal-title').textContent = 'Add Menu Item';
+  document.getElementById('d-name').value = '';
+  document.getElementById('d-category').value = 'swallows';
+  document.getElementById('d-desc').value = '';
+  document.getElementById('d-price').value = '';
+  document.getElementById('d-tag').value = '';
+  document.getElementById('d-img').value = '';
+  document.getElementById('d-emoji').value = '🍽️';
+  document.getElementById('d-bg').value = 'linear-gradient(135deg,#3D1A00,#6B3200)';
+  document.getElementById('d-featured').checked = false;
+  document.getElementById('d-available').checked = true;
+  updateEmojiPreview();
+  openModal('dish-modal');
+}
+
+function openEditDish(id) {
+  const item = FC.getMenu().find(i => i.id === id);
+  if (!item) return;
+  editingDishId = id;
+  document.getElementById('modal-title').textContent = 'Edit Menu Item';
+  document.getElementById('d-name').value = item.name;
+  document.getElementById('d-category').value = item.category;
+  document.getElementById('d-desc').value = item.desc;
+  document.getElementById('d-price').value = item.price;
+  document.getElementById('d-tag').value = item.tag || '';
+  document.getElementById('d-img').value = item.img || '';
+  document.getElementById('d-emoji').value = item.emoji;
+  document.getElementById('d-bg').value = item.bg;
+  document.getElementById('d-featured').checked = !!item.featured;
+  document.getElementById('d-available').checked = !!item.available;
+  updateEmojiPreview();
+  openModal('dish-modal');
+}
+
+function compressToBlob(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 900;
+        let w = img.width, h = img.height;
+        if (w > MAX || h > MAX) {
+          if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+          else { w = Math.round(w * MAX / h); h = MAX; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        canvas.toBlob(blob => resolve(new File([blob], file.name, { type: 'image/jpeg' })), 'image/jpeg', 0.78);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handlePhotoUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const progress = document.getElementById('d-img-progress');
+  progress.textContent = 'Uploading photo…';
+  progress.style.display = 'block';
+  try {
+    const compressed = await compressToBlob(file);
+    const url = await FC.uploadPhoto(compressed);
+    document.getElementById('d-img').value = url;
+    input.value = '';
+    updateEmojiPreview();
+    progress.style.display = 'none';
+  } catch (err) {
+    progress.textContent = 'Upload failed — check your internet and try again.';
+    console.error(err);
+  }
+}
+
+function updateEmojiPreview() {
+  const el = document.getElementById('modal-emoji-preview');
+  const img = document.getElementById('d-img').value.trim();
+  if (img) {
+    el.style.background = 'none';
+    el.innerHTML = `<img src="${img}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" onerror="this.parentElement.innerHTML='❌';this.parentElement.style.background='#fee';" />`;
+  } else {
+    el.innerHTML = document.getElementById('d-emoji').value;
+    el.style.background = document.getElementById('d-bg').value;
+  }
+}
+
+async function saveDish() {
+  const name = document.getElementById('d-name').value.trim();
+  const price = parseInt(document.getElementById('d-price').value);
+  if (!name) return toast('Item name is required.', 'error');
+  if (!price || price < 0) return toast('Please enter a valid price.', 'error');
+
+  const dish = {
+    name,
+    category: document.getElementById('d-category').value,
+    desc: document.getElementById('d-desc').value.trim(),
+    price,
+    tag: document.getElementById('d-tag').value.trim(),
+    img: document.getElementById('d-img').value.trim(),
+    emoji: document.getElementById('d-emoji').value.trim() || '🍽️',
+    bg: document.getElementById('d-bg').value.trim() || 'linear-gradient(135deg,#555,#888)',
+    featured: document.getElementById('d-featured').checked,
+    available: document.getElementById('d-available').checked,
+  };
+
+  try {
+    if (editingDishId !== null) {
+      await FC.updateMenuItem(editingDishId, dish);
+      toast(`"${name}" updated.`, 'success');
+    } else {
+      await FC.addMenuItem(dish);
+      toast(`"${name}" added to menu.`, 'success');
+    }
+    closeModal('dish-modal');
+    renderMenuTable();
+    updateBadges();
+  } catch (err) {
+    toast('Failed to save item. Try again.', 'error');
+    console.error(err);
+  }
+}
+
+async function deleteDish(id) {
+  const item = FC.getMenu().find(i => i.id === id);
+  if (!item) return;
+  if (!confirm(`Delete "${item.name}" from the menu? This cannot be undone.`)) return;
+  await FC.deleteMenuItem(id);
+  renderMenuTable();
+  updateBadges();
+  toast(`"${item.name}" deleted.`, 'success');
+}
+
+async function resetMenu() {
+  if (!confirm('Reset the entire menu to the original defaults? All your changes will be lost.')) return;
+  await FC.resetMenu();
+  renderMenuTable();
+  updateBadges();
+  toast('Menu reset to defaults.', 'success');
+}
+
+/* ── Info ── */
+function loadInfoForm() {
+  const info = FC.getInfo();
+  document.getElementById('i-name').value = info.restaurantName;
+  document.getElementById('i-tagline').value = info.tagline;
+  document.getElementById('i-phone').value = info.phone;
+  document.getElementById('i-email').value = info.email;
+  document.getElementById('i-address').value = info.address;
+  document.getElementById('i-instagram').value = info.instagram || '';
+  document.getElementById('i-facebook').value = info.facebook || '';
+  document.getElementById('i-twitter').value = info.twitter || '';
+  document.getElementById('i-weekday').value = info.hours.weekday;
+  document.getElementById('i-saturday').value = info.hours.saturday;
+  document.getElementById('i-sunday').value = info.hours.sunday;
+  document.getElementById('i-holiday').value = info.hours.holiday;
+  document.getElementById('i-delivery-fee').value = info.deliveryFee;
+  document.getElementById('i-min-order').value = info.minOrder;
+}
+
+async function saveInfo(e) {
+  e.preventDefault();
+  await FC.saveInfo({
+    restaurantName: document.getElementById('i-name').value.trim(),
+    tagline: document.getElementById('i-tagline').value.trim(),
+    phone: document.getElementById('i-phone').value.trim(),
+    email: document.getElementById('i-email').value.trim(),
+    address: document.getElementById('i-address').value.trim(),
+    instagram: document.getElementById('i-instagram').value.trim(),
+    facebook: document.getElementById('i-facebook').value.trim(),
+    twitter: document.getElementById('i-twitter').value.trim(),
+    hours: {
+      weekday: document.getElementById('i-weekday').value.trim(),
+      saturday: document.getElementById('i-saturday').value.trim(),
+      sunday: document.getElementById('i-sunday').value.trim(),
+      holiday: document.getElementById('i-holiday').value.trim(),
+    },
+    deliveryFee: parseInt(document.getElementById('i-delivery-fee').value) || 0,
+    minOrder: parseInt(document.getElementById('i-min-order').value) || 0,
+  });
+  toast('Restaurant info saved!', 'success');
+}
+
+/* ── Reservations ── */
+async function renderReservations() {
+  const filter = document.getElementById('res-filter').value;
+  const all = await FC.getReservations();
+  const list = all.filter(r => !filter || r.status === filter);
+  const tbody = document.getElementById('res-table-body');
+  if (list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#aaa;">No reservations found</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(r => `
+    <tr>
+      <td><strong>${r.name}</strong><br/><span style="font-size:.78rem;color:#888;">${r.phone || r.email || ''}</span></td>
+      <td>${r.date}<br/><span style="font-size:.78rem;color:#888;">${r.time}</span></td>
+      <td>${r.guests}</td>
+      <td>${r.occasion || '—'}</td>
+      <td>
+        <select class="filter-select" style="padding:.3rem .6rem;font-size:.78rem;" onchange="updateResStatus(${r.id},this.value,${JSON.stringify(r.phone||'')},${JSON.stringify(r.name||'')},${JSON.stringify(r.date||'')},${JSON.stringify(r.time||'')})">
+          ${['pending','confirmed','cancelled'].map(s => `<option ${r.status===s?'selected':''} value="${s}">${s}</option>`).join('')}
+        </select>
+      </td>
+      <td style="font-size:.78rem;color:#888;">${FC.formatDate(r.created_at)}</td>
+      <td>
+        <div class="action-group">
+          ${r.notes ? `<button class="btn btn-ghost btn-sm" onclick="alert('Notes:\\n'+decodeURIComponent('${encodeURIComponent(r.notes || '')}'))" title="View notes">📋</button>` : ''}
+          <button class="btn btn-danger btn-sm btn-icon" onclick="deleteRes(${r.id})" title="Delete">🗑️</button>
+        </div>
+      </td>
+    </tr>`).join('');
+  updateBadges();
+}
+
+// ── Replace with your Termii API key from termii.com ──
+const TERMII_KEY = 'YOUR_TERMII_API_KEY_HERE';
+
+async function sendTermiiSMS(phone, message) {
+  if (!TERMII_KEY || TERMII_KEY.startsWith('YOUR_')) return; // key not set yet
+  let to = phone.replace(/\D/g, '');
+  if (to.startsWith('0')) to = '234' + to.slice(1);
+  try {
+    await fetch('https://api.ng.termii.com/api/sms/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ to, from: 'Faciouz', sms: message, type: 'plain', channel: 'generic', api_key: TERMII_KEY }),
+    });
+  } catch (err) {
+    console.warn('SMS failed (non-critical):', err);
+  }
+}
+
+async function updateResStatus(id, status, phone, name, date, time) {
+  await FC.updateReservation(id, { status });
+  if (status === 'confirmed' && phone) {
+    const msg = `Hi ${name}, your table at Faciouz Care on ${date} at ${time} is CONFIRMED! 🎉 See you soon. Call 07069401415 if you need changes.`;
+    sendTermiiSMS(phone, msg);
+    toast(`SMS confirmation sent to ${phone}`, 'success');
+  }
+  updateBadges();
+  renderDashboard();
+}
+
+async function deleteRes(id) {
+  if (!confirm('Delete this reservation?')) return;
+  await FC.deleteReservation(id);
+  renderReservations();
+  renderDashboard();
+}
+
+/* ── Orders ── */
+const ORDER_STATUSES = ['new', 'confirmed', 'ready', 'delivered', 'cancelled'];
+
+async function renderOrders() {
+  const filter = document.getElementById('order-filter').value;
+  const all = await FC.getOrders();
+  const list = all.filter(o => !filter || o.status === filter);
+  const tbody = document.getElementById('orders-table-body');
+  if (list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#aaa;">No orders found</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(o => {
+    const itemsSummary = (o.items || []).map(i => `${i.name} ×${i.qty}`).join(', ') || '—';
+    return `
+    <tr>
+      <td><strong>#${String(o.id).slice(-5)}</strong></td>
+      <td>${o.mode === 'delivery' ? '🚴 Delivery' : '🏃 Pickup'}<br/>
+        ${o.mode === 'delivery' ? `<span style="font-size:.75rem;color:#888;">${o.address || ''}</span>` : ''}
+        ${o.phone ? `<span style="font-size:.75rem;color:#888;display:block;">${o.phone}</span>` : ''}
+      </td>
+      <td style="font-size:.8rem;max-width:200px;">${itemsSummary}</td>
+      <td style="font-weight:700;color:var(--orange);">${FC.formatPrice(o.total)}</td>
+      <td>
+        <select class="filter-select" style="padding:.3rem .6rem;font-size:.78rem;" onchange="updateOrderStatus(${o.id},this.value)">
+          ${ORDER_STATUSES.map(s => `<option ${o.status===s?'selected':''} value="${s}">${s}</option>`).join('')}
+        </select>
+      </td>
+      <td style="font-size:.78rem;color:#888;">${FC.formatDate(o.created_at)}</td>
+      <td>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="deleteOrder(${o.id})" title="Delete">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+  updateBadges();
+}
+
+async function updateOrderStatus(id, status) {
+  await FC.updateOrder(id, { status });
+  updateBadges();
+  renderDashboard();
+}
+
+async function deleteOrder(id) {
+  if (!confirm('Delete this order?')) return;
+  await FC.deleteOrder(id);
+  renderOrders();
+  renderDashboard();
+}
+
+/* ── Messages ── */
+async function renderMessages() {
+  const filter = document.getElementById('msg-filter').value;
+  const all = await FC.getMessages();
+  const list = all.filter(m => !filter || (filter === 'unread' ? !m.read : m.read));
+  const tbody = document.getElementById('msg-table-body');
+  if (list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#aaa;">No messages found</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(m => `
+    <tr style="${!m.read ? 'font-weight:600;' : ''}">
+      <td>${m.name}</td>
+      <td style="font-size:.82rem;">${m.email || '—'}</td>
+      <td>${m.subject || '—'}</td>
+      <td style="font-size:.82rem;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${(m.message||'').replace(/"/g,"'")}">
+        ${(m.message || '').substring(0, 60)}${(m.message || '').length > 60 ? '…' : ''}
+      </td>
+      <td><span class="pill ${m.read ? 'pill-gray' : 'pill-orange'}">${m.read ? 'Read' : 'Unread'}</span></td>
+      <td style="font-size:.78rem;color:#888;">${FC.formatDate(m.created_at)}</td>
+      <td>
+        <div class="action-group">
+          ${!m.read ? `<button class="btn btn-ghost btn-sm" onclick="markRead(${m.id})">✓ Mark Read</button>` : ''}
+          <button class="btn btn-ghost btn-sm" onclick="viewMsg(${m.id})">👁</button>
+          <button class="btn btn-danger btn-sm btn-icon" onclick="deleteMsg(${m.id})">🗑️</button>
+        </div>
+      </td>
+    </tr>`).join('');
+  updateBadges();
+}
+
+async function markRead(id) { await FC.markMessageRead(id); renderMessages(); }
+
+async function viewMsg(id) {
+  const msgs = await FC.getMessages();
+  const m = msgs.find(m => m.id === id);
+  if (!m) return;
+  await FC.markMessageRead(id);
+  alert(`From: ${m.name}\nEmail: ${m.email || '—'}\nPhone: ${m.phone || '—'}\nSubject: ${m.subject || '—'}\n\n${m.message}`);
+  renderMessages();
+}
+
+async function deleteMsg(id) {
+  if (!confirm('Delete this message?')) return;
+  await FC.deleteMessage(id);
+  renderMessages();
+}
+
+/* ── Settings helpers ── */
+async function clearInbox() {
+  if (!confirm('Clear all reservations, orders, and messages? This cannot be undone.')) return;
+  await FC.clearInbox();
+  await updateBadges();
+  await renderDashboard();
+  toast('Inbox cleared.', 'success');
+}
+
+async function exportData() {
+  const [reservations, orders, messages] = await Promise.all([
+    FC.getReservations(), FC.getOrders(), FC.getMessages()
+  ]);
+  const data = { menu: FC.getMenu(), info: FC.getInfo(), reservations, orders, messages, exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'faciouz-data-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  toast('Data exported successfully.', 'success');
+}
+
+/* ── Modal ── */
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-backdrop').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+/* ── Toast ── */
+let toastTimer;
+function toast(msg, type = 'success') {
+  const el = document.getElementById('toast');
+  el.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;
+  el.className = 'toast ' + type + ' show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+/* ── Status pill helper ── */
+function statusPill(type, status) {
+  const map = {
+    pending: 'pill-orange', confirmed: 'pill-green', cancelled: 'pill-red',
+    new: 'pill-orange', ready: 'pill-blue', delivered: 'pill-green',
+  };
+  return map[status] || 'pill-gray';
+}
+
+/* ── Boot ── */
+(async () => {
+  await FC.init();
+  if (FC.isLoggedIn()) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  }
+})();
+</script>
+</body>
+</html>

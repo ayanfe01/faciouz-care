@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu – Faciouz Care</title>
+  <meta name="description" content="Explore the full Faciouz Care menu — Amala, Jollof Rice, Fried Rice, soups, proteins, drinks and more." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="Faciouz Care logo.jpeg" type="image/jpeg" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement-bar">
+  🎉 NOW OPEN! &nbsp;|&nbsp; Delivery Available &nbsp;|&nbsp; Call: <a href="tel:07069401415">07069401415</a> / <a href="tel:08033648400">08033648400</a>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="Faciouz Care logo.jpeg" alt="Faciouz Care Logo" />
+    <span>Faciouz Care</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="reservations.html">Reservations</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="order.html" class="btn-order">Order Online</a></li>
+  </ul>
+  <button class="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <h1>Our <span>Menu</span></h1>
+  <p>Authentic Nigerian dishes made fresh daily with love and the finest ingredients</p>
+</div>
+
+<!-- MENU -->
+<section style="background: var(--light);">
+  <div class="section-header">
+    <span class="section-label">What We Serve</span>
+    <h2>Explore Our Full Menu</h2>
+    <div class="divider"></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="menu-tabs">
+    <button class="tab-btn active" data-tab="all">All</button>
+    <button class="tab-btn" data-tab="swallows">Swallows</button>
+    <button class="tab-btn" data-tab="rice">Rice Dishes</button>
+    <button class="tab-btn" data-tab="soups">Soups</button>
+    <button class="tab-btn" data-tab="protein">Protein</button>
+    <button class="tab-btn" data-tab="drinks">Drinks</button>
+    <button class="tab-btn" data-tab="extras">Extras</button>
+  </div>
+
+  <div class="menu-grid">
+
+    <!-- SWALLOWS -->
+    <div class="menu-item" data-category="swallows">
+      <div class="menu-item-img amala">🍲</div>
+      <div class="menu-item-body">
+        <h3>Amala</h3>
+        <p>Smooth yam flour swallow — pairs perfectly with Ewedu, Gbegiri, or Egusi soup.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦800</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="swallows">
+      <div class="menu-item-img pounded">🫙</div>
+      <div class="menu-item-body">
+        <h3>Pounded Yam</h3>
+        <p>Classic hand-pounded yam — fluffy, elastic and perfect with any Nigerian soup.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦900</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="swallows">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#5C4A1A,#9B7D2E);">🌽</div>
+      <div class="menu-item-body">
+        <h3>Eba (Garri)</h3>
+        <p>Classic cassava swallow with a firm, satisfying texture — a Nigerian staple.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦700</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="swallows">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#2E4A1A,#4E7D2E);">🟢</div>
+      <div class="menu-item-body">
+        <h3>Semovita</h3>
+        <p>Light and smooth semolina swallow — great with Egusi, Bitterleaf or Ogbono soup.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦750</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <!-- RICE DISHES -->
+    <div class="menu-item" data-category="rice">
+      <div class="menu-item-img jollof">🍛</div>
+      <div class="menu-item-body">
+        <h3>Party Jollof Rice</h3>
+        <p>Smoky, rich Nigerian jollof rice with tomatoes and peppers. Served with chicken or beef.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦2,000</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="rice">
+      <div class="menu-item-img fried">🍚</div>
+      <div class="menu-item-body">
+        <h3>Special Fried Rice</h3>
+        <p>Fragrant fried rice with vegetables, shrimp, and choice of chicken or beef.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦2,200</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="rice">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#8B4513,#C0390A);">🍱</div>
+      <div class="menu-item-body">
+        <h3>Ofada Rice & Stew</h3>
+        <p>Local brown ofada rice served with the signature spicy ofada sauce and assorted offals.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦2,500</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="rice">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#1B4A6B,#2D7D9B);">🌊</div>
+      <div class="menu-item-body">
+        <h3>White Rice & Stew</h3>
+        <p>Fluffy plain white rice with our rich homemade tomato stew and protein of your choice.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦1,800</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <!-- SOUPS -->
+    <div class="menu-item" data-category="soups">
+      <div class="menu-item-img egusi">🥣</div>
+      <div class="menu-item-body">
+        <h3>Egusi Soup</h3>
+        <p>Melon seed soup with palm oil, assorted meats, dried fish, and leafy greens.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦1,500</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="soups">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#1B4A1A,#2D7D2E);">🌿</div>
+      <div class="menu-item-body">
+        <h3>Ewedu Soup</h3>
+        <p>Silky jute leaf soup — traditionally enjoyed with Amala and a side of Gbegiri stew.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦1,000</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="soups">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#4A1A00,#8B3A00);">🟤</div>
+      <div class="menu-item-body">
+        <h3>Ogbono Soup</h3>
+        <p>Draw soup made from wild mango seeds with leafy greens and assorted proteins.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦1,500</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="soups">
+      <div class="menu-item-img pepper">🍖</div>
+      <div class="menu-item-body">
+        <h3>Pepper Soup</h3>
+        <p>Aromatic, spicy broth with catfish, goat meat, or assorted — Nigerian comfort in a bowl.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦3,000</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="soups">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#2D4A1A,#4E7D2E);">🥬</div>
+      <div class="menu-item-body">
+        <h3>Bitterleaf Soup</h3>
+        <p>Classic Igbo bitterleaf soup with cocoyam thickener, palm oil, and assorted meats.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦1,600</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <!-- PROTEIN -->
+    <div class="menu-item" data-category="protein">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#5C1A00,#A03000);">🍗</div>
+      <div class="menu-item-body">
+        <h3>Grilled Chicken</h3>
+        <p>Juicy whole chicken marinated in house spices, flame-grilled to smoky perfection.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦3,500</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="protein">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#3A1A00,#6B3200);">🥩</div>
+      <div class="menu-item-body">
+        <h3>Suya (Beef Skewers)</h3>
+        <p>Spiced beef skewers with groundnut powder seasoning — the iconic Nigerian street snack elevated.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦2,000</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="protein">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#1A3A6B,#2D6B9B);">🐟</div>
+      <div class="menu-item-body">
+        <h3>Fried/Grilled Fish</h3>
+        <p>Fresh river or sea fish, seasoned with Nigerian spices and fried or grilled to order.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦2,500</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <!-- DRINKS -->
+    <div class="menu-item" data-category="drinks">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#8B0033,#CC0055);">🥤</div>
+      <div class="menu-item-body">
+        <h3>Zobo (Hibiscus Drink)</h3>
+        <p>Chilled hibiscus flower drink infused with ginger, cloves, and pineapple. Naturally refreshing.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦500</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="drinks">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#1B6B2F,#2D9147);">🌿</div>
+      <div class="menu-item-body">
+        <h3>Kunu (Spiced Millet Drink)</h3>
+        <p>Traditional northern Nigerian fermented millet drink — smooth, spiced, and nourishing.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦500</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="drinks">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#E8650A,#FF8C38);">🍊</div>
+      <div class="menu-item-body">
+        <h3>Fresh Fruit Juice</h3>
+        <p>Seasonal fresh-squeezed juice — orange, watermelon, pineapple, or mixed tropical.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦700</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <!-- EXTRAS -->
+    <div class="menu-item" data-category="extras">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#C0390A,#E87038);">🧆</div>
+      <div class="menu-item-body">
+        <h3>Moi Moi</h3>
+        <p>Steamed bean pudding with peppers, onions, and egg or fish — soft and savoury.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦600</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="extras">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#7A6000,#C4A000);">🍟</div>
+      <div class="menu-item-body">
+        <h3>Plantain (Dodo)</h3>
+        <p>Sweet ripe plantain slices fried golden — the perfect side to any Nigerian meal.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦500</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+    <div class="menu-item" data-category="extras">
+      <div class="menu-item-img" style="background:linear-gradient(135deg,#4A1A00,#8B3A00);">🍘</div>
+      <div class="menu-item-body">
+        <h3>Akara (Bean Cakes)</h3>
+        <p>Fluffy deep-fried bean fritters seasoned with peppers and onions — a beloved Nigerian breakfast snack.</p>
+      </div>
+      <div class="menu-item-footer">
+        <span class="price">₦400</span>
+        <a href="order.html" class="add-btn">Order Now</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="reservation-strip">
+  <h2>Ready to Order?</h2>
+  <p>Order online for delivery or pick-up, or reserve a table for the full dine-in experience.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="order.html" class="btn btn-primary" style="background:var(--orange);">Order Online</a>
+    <a href="reservations.html" class="btn btn-secondary">Reserve a Table</a>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section style="background:var(--white);" id="reviews-section">
+  <div class="section-header">
+    <span class="section-label">What Customers Say</span>
+    <h2>Ratings &amp; Reviews</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1.2fr;gap:2.5rem;align-items:start;">
+
+    <!-- Recent reviews -->
+    <div>
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1.25rem;">Recent Reviews</h3>
+      <div id="reviews-list">
+        <div style="color:#aaa;font-size:.88rem;">Loading reviews…</div>
+      </div>
+    </div>
+
+    <!-- Leave a review form -->
+    <div style="background:var(--light);border-radius:var(--radius);padding:1.75rem;">
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1.25rem;">Leave a Review</h3>
+      <form id="review-form" novalidate>
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:.82rem;font-weight:700;color:#555;display:block;margin-bottom:.4rem;">Your Name *</label>
+          <input id="rv-name" type="text" placeholder="e.g. Amaka" required style="width:100%;padding:.65rem .9rem;border:1.5px solid rgba(0,0,0,.1);border-radius:7px;font-size:.88rem;font-family:inherit;outline:none;box-sizing:border-box;" />
+        </div>
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:.82rem;font-weight:700;color:#555;display:block;margin-bottom:.4rem;">Dish *</label>
+          <select id="rv-dish" required style="width:100%;padding:.65rem .9rem;border:1.5px solid rgba(0,0,0,.1);border-radius:7px;font-size:.88rem;font-family:inherit;outline:none;box-sizing:border-box;">
+            <option value="">Select a dish…</option>
+          </select>
+        </div>
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:.82rem;font-weight:700;color:#555;display:block;margin-bottom:.4rem;">Rating *</label>
+          <div id="star-picker" style="display:flex;gap:.35rem;font-size:1.8rem;cursor:pointer;user-select:none;">
+            <span data-val="1">☆</span><span data-val="2">☆</span><span data-val="3">☆</span><span data-val="4">☆</span><span data-val="5">☆</span>
+          </div>
+          <input type="hidden" id="rv-rating" value="0" />
+        </div>
+        <div style="margin-bottom:1.25rem;">
+          <label style="font-size:.82rem;font-weight:700;color:#555;display:block;margin-bottom:.4rem;">Comment</label>
+          <textarea id="rv-comment" placeholder="Tell us about your experience…" rows="3" style="width:100%;padding:.65rem .9rem;border:1.5px solid rgba(0,0,0,.1);border-radius:7px;font-size:.88rem;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Submit Review</button>
+        <div id="rv-success" style="display:none;margin-top:.75rem;color:var(--green);font-weight:600;font-size:.88rem;">✅ Thank you! Your review has been submitted.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="Faciouz Care logo.jpeg" alt="Faciouz Care" />
+      <p>Bringing the authentic taste of Nigeria to your table. Every meal is made with love, tradition, and the finest ingredients.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="reservations.html">Reservations</a></li>
+        <li><a href="order.html">Order Online</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>📍 6, Ajose Str., Off PPL Bus Stop, Ota, Ogun State<br/><br/>📞 07069401415 / 08033648400<br/><br/>📧 hello@faciouzcare.com<br/><br/>🕐 Mon–Sun: 9am – 10pm</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 <a href="admin.html" style="text-decoration:none;"><span>Faciouz Care</span></a>. All rights reserved.</p>
+    <p>Made with ❤️ in Nigeria</p>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script>
+(async () => {
+  await FC.init();
+
+  // ── Render menu ──
+  const grid = document.querySelector('.menu-grid');
+  const items = FC.getMenu().filter(i => i.available);
+  const ratings = await FC.getAverageRatings();
+
+  if (grid && items.length) {
+    grid.innerHTML = items.map(i => {
+      const rv = ratings[i.name];
+      const stars = rv ? '★'.repeat(Math.round(rv.avg)) + '☆'.repeat(5 - Math.round(rv.avg)) : '';
+      const rvBadge = rv ? `<span style="font-size:.75rem;color:#E8650A;font-weight:600;">${stars} ${rv.avg} (${rv.count})</span>` : '';
+      return `
+      <div class="menu-item" data-category="${i.category}">
+        ${i.img ? `<div class="menu-item-img" style="padding:0;overflow:hidden;"><img src="${i.img}" style="width:100%;height:100%;object-fit:cover;" /></div>` : `<div class="menu-item-img" style="background:${i.bg}">${i.emoji}</div>`}
+        <div class="menu-item-body">
+          <h3>${i.name}</h3>
+          ${rvBadge}
+          <p>${i.desc}</p>
+        </div>
+        <div class="menu-item-footer">
+          <span class="price">${FC.formatPrice(i.price)}</span>
+          <a href="order.html" class="add-btn">Order Now</a>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Populate dish select ──
+  const dishSel = document.getElementById('rv-dish');
+  if (dishSel) {
+    items.forEach(i => {
+      const opt = document.createElement('option');
+      opt.value = i.name; opt.textContent = i.name;
+      dishSel.appendChild(opt);
+    });
+  }
+
+  // ── Render recent reviews ──
+  async function loadReviews() {
+    const reviews = await FC.getReviews();
+    const list = document.getElementById('reviews-list');
+    if (!list) return;
+    if (reviews.length === 0) {
+      list.innerHTML = '<p style="color:#aaa;font-size:.88rem;">No reviews yet — be the first!</p>';
+      return;
+    }
+    list.innerHTML = reviews.slice(0, 8).map(r => `
+      <div style="padding:.9rem 0;border-bottom:1px solid rgba(0,0,0,.07);">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;">
+          <span style="font-weight:700;font-size:.88rem;">${r.name}</span>
+          <span style="font-size:.82rem;color:#E8650A;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span>
+          <span style="font-size:.72rem;color:#aaa;margin-left:auto;">${new Date(r.created_at).toLocaleDateString('en-NG',{day:'numeric',month:'short'})}</span>
+        </div>
+        <div style="font-size:.78rem;color:var(--orange);font-weight:600;margin-bottom:.3rem;">${r.dish}</div>
+        ${r.comment ? `<p style="font-size:.85rem;color:#555;margin:0;">${r.comment}</p>` : ''}
+      </div>`).join('');
+  }
+  loadReviews();
+
+  // ── Star picker ──
+  let selectedRating = 0;
+  document.querySelectorAll('#star-picker span').forEach(star => {
+    star.addEventListener('mouseover', () => {
+      const v = +star.dataset.val;
+      document.querySelectorAll('#star-picker span').forEach((s, i) => { s.textContent = i < v ? '★' : '☆'; s.style.color = i < v ? '#E8650A' : '#ccc'; });
+    });
+    star.addEventListener('mouseout', () => {
+      document.querySelectorAll('#star-picker span').forEach((s, i) => { s.textContent = i < selectedRating ? '★' : '☆'; s.style.color = i < selectedRating ? '#E8650A' : '#ccc'; });
+    });
+    star.addEventListener('click', () => {
+      selectedRating = +star.dataset.val;
+      document.getElementById('rv-rating').value = selectedRating;
+    });
+  });
+
+  // ── Review form submit ──
+  document.getElementById('review-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const name = document.getElementById('rv-name').value.trim();
+    const dish = document.getElementById('rv-dish').value;
+    const rating = +document.getElementById('rv-rating').value;
+    const comment = document.getElementById('rv-comment').value.trim();
+    if (!name || !dish) return alert('Please enter your name and select a dish.');
+    if (!rating) return alert('Please select a star rating.');
+    const btn = this.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = 'Submitting…';
+    try {
+      await FC.addReview({ name, dish, rating, comment });
+      document.getElementById('rv-success').style.display = 'block';
+      this.reset(); selectedRating = 0;
+      document.querySelectorAll('#star-picker span').forEach(s => { s.textContent = '☆'; s.style.color = '#ccc'; });
+      loadReviews();
+      setTimeout(() => document.getElementById('rv-success').style.display = 'none', 4000);
+    } catch (err) {
+      alert('Could not submit review. Please try again.');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Submit Review';
+    }
+  });
+})();
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>

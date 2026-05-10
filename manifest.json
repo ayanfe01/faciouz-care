@@ -1,0 +1,38 @@
+{
+  "name": "Faciouz Care",
+  "short_name": "Faciouz",
+  "description": "Authentic Nigerian food — order online, reserve a table, explore our menu.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#E8650A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "Faciouz Care logo.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "Faciouz Care logo.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Order Food",
+      "short_name": "Order",
+      "url": "/order.html",
+      "icons": [{ "src": "Faciouz Care logo.jpeg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Reserve a Table",
+      "short_name": "Reserve",
+      "url": "/reservations.html",
+      "icons": [{ "src": "Faciouz Care logo.jpeg", "sizes": "96x96" }]
+    }
+  ]
+}

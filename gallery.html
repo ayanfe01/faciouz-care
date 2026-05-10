@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery – Faciouz Care</title>
+  <meta name="description" content="Browse the Faciouz Care gallery — our food, atmosphere, and the community we love." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="Faciouz Care logo.jpeg" type="image/jpeg" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    .gallery-full-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .gallery-full-item {
+      border-radius: var(--radius);
+      overflow: hidden;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .gallery-full-item:hover { transform: scale(1.03); box-shadow: var(--shadow-lg); }
+    .gallery-full-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-full-item.tall { grid-row: span 2; height: 100%; min-height: 497px; font-size: 6rem; }
+    .gallery-full-item.wide { grid-column: span 2; }
+    .gallery-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      color: white;
+      padding: 1.25rem 1rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+    .gallery-full-item:hover .gallery-caption { transform: translateY(0); }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-emoji { font-size: 8rem; }
+    .lightbox-caption { color: white; font-size: 1.1rem; font-weight: 600; }
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem; right: 2rem;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .lightbox-close:hover { opacity: 1; }
+
+    .upload-note {
+      background: rgba(232,101,10,0.08);
+      border: 1.5px dashed rgba(232,101,10,0.4);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 3rem;
+      color: #666;
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+    .upload-note strong { color: var(--orange); }
+  </style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement-bar">
+  🎉 NOW OPEN! &nbsp;|&nbsp; Delivery Available &nbsp;|&nbsp; Call: <a href="tel:07069401415">07069401415</a> / <a href="tel:08033648400">08033648400</a>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="Faciouz Care logo.jpeg" alt="Faciouz Care Logo" />
+    <span>Faciouz Care</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="reservations.html">Reservations</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="order.html" class="btn-order">Order Online</a></li>
+  </ul>
+  <button class="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <h1>Our <span>Gallery</span></h1>
+  <p>A visual celebration of our food, our space, and the people we feed</p>
+</div>
+
+<!-- GALLERY -->
+<section style="background: var(--light);">
+  <div class="section-header">
+    <span class="section-label">Food & Atmosphere</span>
+    <h2>See It Before You Taste It</h2>
+    <div class="divider"></div>
+    <p>Every image tells the story of a meal crafted with care. Hover to learn more, click to enlarge.</p>
+  </div>
+
+  <div class="gallery-full-grid" id="gallery-grid">
+    <!-- loaded dynamically -->
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="reservation-strip">
+  <h2>Hungry Yet?</h2>
+  <p>Come experience these flavours in person or order from the comfort of your home.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="order.html" class="btn btn-primary" style="background:var(--orange);">Order Online</a>
+    <a href="reservations.html" class="btn btn-secondary">Book a Table</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="Faciouz Care logo.jpeg" alt="Faciouz Care" />
+      <p>Bringing the authentic taste of Nigeria to your table. Every meal is made with love, tradition, and the finest ingredients.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="reservations.html">Reservations</a></li>
+        <li><a href="order.html">Order Online</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>📍 6, Ajose Str., Off PPL Bus Stop, Ota, Ogun State<br/><br/>📞 07069401415 / 08033648400<br/><br/>📧 hello@faciouzcare.com<br/><br/>🕐 Mon–Sun: 9am – 10pm</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 <a href="admin.html" style="text-decoration:none;"><span>Faciouz Care</span></a>. All rights reserved.</p>
+    <p>Made with ❤️ in Nigeria</p>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lb-img" src="" alt="" style="display:none;max-width:90vw;max-height:78vh;border-radius:10px;object-fit:contain;" onclick="event.stopPropagation()" />
+  <div class="lightbox-emoji" id="lb-emoji" style="display:none;"></div>
+  <div class="lightbox-caption" id="lb-caption"></div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+const FALLBACK_PHOTOS = [
+  { url: '', caption: 'Party Jollof Rice', emoji: '🍛', bg: 'linear-gradient(135deg,#C0390A,#E8650A)' },
+  { url: '', caption: 'Egusi Soup', emoji: '🥣', bg: 'linear-gradient(135deg,#1B6B2F,#2D9147)' },
+  { url: '', caption: 'Special Fried Rice', emoji: '🍚', bg: 'linear-gradient(135deg,#7A6000,#C4A000)' },
+  { url: '', caption: 'Amala & Ewedu', emoji: '🍲', bg: 'linear-gradient(135deg,#3D1A00,#6B3200)' },
+  { url: '', caption: 'Pepper Soup', emoji: '🍖', bg: 'linear-gradient(135deg,#8B0000,#CC2200)' },
+  { url: '', caption: 'Grilled Chicken', emoji: '🍗', bg: 'linear-gradient(135deg,#5C1A00,#A03000)' },
+  { url: '', caption: 'Suya Skewers', emoji: '🥩', bg: 'linear-gradient(135deg,#3A1A00,#6B3200)' },
+  { url: '', caption: 'Sweet Fried Plantain', emoji: '🍟', bg: 'linear-gradient(135deg,#7A6000,#C4A000)' },
+  { url: '', caption: 'Chilled Zobo Drink', emoji: '🥤', bg: 'linear-gradient(135deg,#8B0033,#CC0055)' },
+  { url: '', caption: 'Ewedu Soup', emoji: '🌿', bg: 'linear-gradient(135deg,#1B4A1A,#2D7D2E)' },
+  { url: '', caption: 'Our Dining Area', emoji: '🏠', bg: 'linear-gradient(135deg,#1a1a1a,#3a2a1a)' },
+  { url: '', caption: 'Evening Atmosphere', emoji: '✨', bg: 'linear-gradient(135deg,#2a1a3a,#4a2a6a)' },
+];
+
+function openLightbox(src, caption) {
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lb-img');
+  const lbEmoji = document.getElementById('lb-emoji');
+  const lbCaption = document.getElementById('lb-caption');
+  if (src && src.startsWith('http')) {
+    lbImg.src = src; lbImg.style.display = 'block'; lbEmoji.style.display = 'none';
+  } else {
+    lbEmoji.textContent = src; lbEmoji.style.display = 'block'; lbImg.style.display = 'none';
+  }
+  lbCaption.textContent = caption;
+  lb.classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+let _galleryItems = [];
+
+function openLightboxByIndex(i) {
+  const p = _galleryItems[i];
+  const isReal = p.url && p.url.startsWith('http');
+  openLightbox(isReal ? p.url : (p.emoji || '🍽️'), p.caption);
+}
+
+(async () => {
+  await FC.init();
+  const photos = await FC.getGalleryPhotos();
+  const grid = document.getElementById('gallery-grid');
+  _galleryItems = photos.length > 0 ? photos : FALLBACK_PHOTOS;
+  grid.innerHTML = _galleryItems.map((p, i) => {
+    const isReal = p.url && p.url.startsWith('http');
+    const tall = i === 0 ? ' tall' : '';
+    const bg = isReal ? '' : (p.bg ? `background:${p.bg};` : '');
+    return `<div class="gallery-full-item${tall}" style="${bg}" onclick="openLightboxByIndex(${i})">
+      ${isReal
+        ? `<img src="${p.url}" alt="${p.caption||''}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" />`
+        : `<span>${p.emoji || '🍽️'}</span>`}
+      <div class="gallery-overlay">🔍 View</div>
+      <div class="gallery-caption">${p.caption || ''}</div>
+    </div>`;
+  }).join('');
+})();
+</script>
+</body>
+</html>

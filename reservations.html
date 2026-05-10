@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservations – Faciouz Care</title>
+  <meta name="description" content="Reserve a table at Faciouz Care. Book online for dine-in, group dining, or private events." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="Faciouz Care logo.jpeg" type="image/jpeg" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    .res-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: start;
+    }
+    .res-info { }
+    .res-info h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--dark); }
+    .hours-table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; font-size: 0.9rem; }
+    .hours-table td { padding: 0.55rem 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .hours-table td:last-child { text-align: right; font-weight: 600; color: var(--green); }
+    .res-note {
+      background: rgba(232,101,10,0.08);
+      border-left: 4px solid var(--orange);
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.25rem;
+      font-size: 0.88rem;
+      color: #555;
+      line-height: 1.7;
+    }
+    .res-note strong { color: var(--orange-dark); }
+    @media (max-width: 800px) {
+      .res-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement-bar">
+  🎉 NOW OPEN! &nbsp;|&nbsp; Delivery Available &nbsp;|&nbsp; Call: <a href="tel:07069401415">07069401415</a> / <a href="tel:08033648400">08033648400</a>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="Faciouz Care logo.jpeg" alt="Faciouz Care Logo" />
+    <span>Faciouz Care</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="reservations.html">Reservations</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="order.html" class="btn-order">Order Online</a></li>
+  </ul>
+  <button class="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <h1>Reserve a <span>Table</span></h1>
+  <p>Secure your spot and enjoy an unforgettable Nigerian dining experience</p>
+</div>
+
+<!-- RESERVATION SECTION -->
+<section style="background: var(--light);">
+  <div class="res-layout">
+
+    <!-- LEFT: Info -->
+    <div class="res-info">
+      <h3>Opening Hours</h3>
+      <table class="hours-table">
+        <tr><td>Monday – Friday</td><td>9:00 AM – 10:00 PM</td></tr>
+        <tr><td>Saturday</td><td>8:00 AM – 11:00 PM</td></tr>
+        <tr><td>Sunday</td><td>10:00 AM – 9:00 PM</td></tr>
+        <tr><td>Public Holidays</td><td>10:00 AM – 8:00 PM</td></tr>
+      </table>
+
+      <h3>Good to Know</h3>
+      <div class="res-note">
+        <p><strong>📋 Reservations</strong> are held for 15 minutes past the booking time. Please call us if you're running late.</p><br/>
+        <p><strong>👥 Large groups</strong> of 10 or more, please call us directly to arrange a private dining experience.</p><br/>
+        <p><strong>🎂 Special occasions?</strong> Let us know in the notes and we'll make it memorable.</p><br/>
+        <p><strong>📞 Phone:</strong> 07069401415 / 08033648400</p>
+      </div>
+
+      <div class="info-item" style="margin-top:1.5rem;">
+        <div class="info-icon">📍</div>
+        <div class="info-text">
+          <h4>Find Us</h4>
+          <p>6, Ajose Str., Off PPL Bus Stop, Behind Sebele Hotel<br/>12, Maria Subulade St., Itele Road, Ota, Ogun State</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Form -->
+    <div class="contact-form">
+      <h3>Book Your Table</h3>
+      <form id="reservation-form" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="res-fname">First Name *</label>
+            <input type="text" id="res-fname" placeholder="Ada" required />
+          </div>
+          <div class="form-group">
+            <label for="res-lname">Last Name *</label>
+            <input type="text" id="res-lname" placeholder="Okonkwo" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="res-phone">Phone Number *</label>
+            <input type="tel" id="res-phone" placeholder="+234 000 000 0000" required />
+          </div>
+          <div class="form-group">
+            <label for="res-email">Email Address</label>
+            <input type="email" id="res-email" placeholder="you@example.com" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="res-date">Preferred Date *</label>
+            <input type="date" id="res-date" required />
+          </div>
+          <div class="form-group">
+            <label for="res-time">Preferred Time *</label>
+            <select id="res-time" required>
+              <option value="">Select a time</option>
+              <option>9:00 AM</option>
+              <option>10:00 AM</option>
+              <option>11:00 AM</option>
+              <option>12:00 PM</option>
+              <option>1:00 PM</option>
+              <option>2:00 PM</option>
+              <option>3:00 PM</option>
+              <option>4:00 PM</option>
+              <option>5:00 PM</option>
+              <option>6:00 PM</option>
+              <option>7:00 PM</option>
+              <option>8:00 PM</option>
+              <option>9:00 PM</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="res-guests">Number of Guests *</label>
+            <select id="res-guests" required>
+              <option value="">Select</option>
+              <option>1 person</option>
+              <option>2 people</option>
+              <option>3 people</option>
+              <option>4 people</option>
+              <option>5 people</option>
+              <option>6 people</option>
+              <option>7 people</option>
+              <option>8 people</option>
+              <option>9 people</option>
+              <option>10+ people (call us)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="res-occasion">Occasion</label>
+            <select id="res-occasion">
+              <option value="">None / Regular dining</option>
+              <option>Birthday</option>
+              <option>Anniversary</option>
+              <option>Business Meal</option>
+              <option>Family Gathering</option>
+              <option>Date Night</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="res-notes">Special Requests / Notes</label>
+          <textarea id="res-notes" placeholder="Dietary requirements, seating preferences, allergies..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">Confirm Reservation</button>
+        <div class="success-msg" id="reservation-success">
+          🎉 Reservation received! We'll confirm by phone or email within 2 hours.
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="Faciouz Care logo.jpeg" alt="Faciouz Care" />
+      <p>Bringing the authentic taste of Nigeria to your table. Every meal is made with love, tradition, and the finest ingredients.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="reservations.html">Reservations</a></li>
+        <li><a href="order.html">Order Online</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>📍 6, Ajose Str., Off PPL Bus Stop, Ota, Ogun State<br/><br/>📞 07069401415 / 08033648400<br/><br/>📧 hello@faciouzcare.com<br/><br/>🕐 Mon–Sun: 9am – 10pm</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 <a href="admin.html" style="text-decoration:none;"><span>Faciouz Care</span></a>. All rights reserved.</p>
+    <p>Made with ❤️ in Nigeria</p>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+(async () => { await FC.init(); })();
+document.getElementById('reservation-form').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  const btn = this.querySelector('button[type="submit"]');
+  const successEl = document.getElementById('reservation-success');
+  btn.disabled = true;
+  btn.textContent = 'Confirming…';
+  try {
+    await FC.saveReservation({
+      name: (document.getElementById('res-fname').value.trim() + ' ' + document.getElementById('res-lname').value.trim()).trim(),
+      phone: document.getElementById('res-phone').value.trim(),
+      email: document.getElementById('res-email').value.trim(),
+      date: document.getElementById('res-date').value,
+      time: document.getElementById('res-time').value,
+      guests: document.getElementById('res-guests').value,
+      occasion: document.getElementById('res-occasion').value,
+      notes: document.getElementById('res-notes').value.trim(),
+    });
+    successEl.style.display = 'block';
+    this.reset();
+    setTimeout(() => successEl.style.display = 'none', 6000);
+  } catch (err) {
+    console.error('Reservation save failed:', err);
+    alert('Sorry, there was a problem with your reservation. Please call us directly.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Confirm Reservation';
+  }
+});
+</script>
+</body>
+</html>
