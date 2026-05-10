@@ -1,5 +1,5 @@
 /* ─── Faciouz Care Service Worker ─── */
-const CACHE = 'faciouz-v1';
+const CACHE = 'faciouz-v3';
 const STATIC = [
   '/',
   '/index.html',
