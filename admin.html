@@ -1105,10 +1105,15 @@ function compressToBlob(file) {
         const canvas = document.createElement('canvas');
         canvas.width = w; canvas.height = h;
         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        canvas.toBlob(blob => resolve(new File([blob], file.name, { type: 'image/jpeg' })), 'image/jpeg', 0.78);
+        canvas.toBlob(blob => {
+          if (blob) resolve(new File([blob], 'photo.jpg', { type: 'image/jpeg' }));
+          else reject(new Error('Canvas toBlob returned null'));
+        }, 'image/jpeg', 0.78);
       };
+      img.onerror = () => reject(new Error('Image failed to load — unsupported format'));
       img.src = e.target.result;
     };
+    reader.onerror = () => reject(new Error('FileReader failed'));
     reader.readAsDataURL(file);
   });
 }
@@ -1117,18 +1122,29 @@ async function handlePhotoUpload(input) {
   const file = input.files[0];
   if (!file) return;
   const progress = document.getElementById('d-img-progress');
-  progress.textContent = 'Uploading photo…';
+  progress.style.color = 'var(--orange)';
+  progress.textContent = 'Compressing photo…';
   progress.style.display = 'block';
   try {
-    const compressed = await compressToBlob(file);
-    const url = await FC.uploadPhoto(compressed);
+    let uploadFile = file;
+    try {
+      uploadFile = await compressToBlob(file);
+    } catch (compressErr) {
+      // Compression failed (e.g. HEIC on older devices) — upload original
+      console.warn('Compression skipped:', compressErr.message);
+      uploadFile = file;
+    }
+    progress.textContent = 'Uploading…';
+    const url = await FC.uploadPhoto(uploadFile);
     document.getElementById('d-img').value = url;
     input.value = '';
     updateEmojiPreview();
     progress.style.display = 'none';
+    toast('Photo uploaded successfully.', 'success');
   } catch (err) {
-    progress.textContent = 'Upload failed — check your internet and try again.';
-    console.error(err);
+    progress.style.color = '#e00';
+    progress.textContent = 'Upload failed: ' + (err?.message || JSON.stringify(err));
+    console.error('Upload error:', err);
   }
 }
 
