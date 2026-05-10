@@ -343,17 +343,44 @@ section { padding: 5rem 2rem; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 4rem;
+  font-size: 0; /* hidden — real photo is shown */
   position: relative;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
 }
 
-.dish-img.amala    { background: linear-gradient(135deg, #3D1A00, #6B3200); }
-.dish-img.jollof   { background: linear-gradient(135deg, #C0390A, #E8650A); }
-.dish-img.fried    { background: linear-gradient(135deg, #7A6000, #C4A000); }
-.dish-img.egusi    { background: linear-gradient(135deg, #1B6B2F, #2D9147); }
-.dish-img.pounded  { background: linear-gradient(135deg, #4A2000, #8B4513); }
-.dish-img.pepper   { background: linear-gradient(135deg, #8B0000, #CC2200); }
+/* Real food photos (Unsplash CDN) — gradient is the fallback */
+.dish-img.amala {
+  background: linear-gradient(135deg, #3D1A00, #6B3200);
+  background-image: url('https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=600&q=80&auto=format&fit=crop');
+  background-size: cover; background-position: center;
+}
+.dish-img.jollof {
+  background: linear-gradient(135deg, #C0390A, #E8650A);
+  background-image: url('https://images.unsplash.com/photo-1665332195309-9d75071138f0?w=600&q=80&auto=format&fit=crop');
+  background-size: cover; background-position: center;
+}
+.dish-img.fried {
+  background: linear-gradient(135deg, #7A6000, #C4A000);
+  background-image: url('https://images.unsplash.com/photo-1603496987674-79600a000f55?w=600&q=80&auto=format&fit=crop');
+  background-size: cover; background-position: center;
+}
+.dish-img.egusi {
+  background: linear-gradient(135deg, #1B6B2F, #2D9147);
+  background-image: url('https://images.unsplash.com/photo-1763048443535-1243379234e2?w=600&q=80&auto=format&fit=crop');
+  background-size: cover; background-position: center;
+}
+.dish-img.pounded {
+  background: linear-gradient(135deg, #4A2000, #8B4513);
+  background-image: url('https://images.unsplash.com/photo-1721942893905-3de47ae22b88?w=600&q=80&auto=format&fit=crop');
+  background-size: cover; background-position: center;
+}
+.dish-img.pepper {
+  background: linear-gradient(135deg, #8B0000, #CC2200);
+  background-image: url('https://images.unsplash.com/photo-1730112696140-19e61bb43d36?w=600&q=80&auto=format&fit=crop');
+  background-size: cover; background-position: center;
+}
 
 .dish-body { padding: 1.25rem; }
 
@@ -1080,12 +1107,14 @@ footer::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3.2rem;
+  font-size: 0;
   transition: transform 0.3s ease;
+  background-size: cover !important;
+  background-position: center !important;
 }
 
 .hero-food-cell:hover { transform: scale(1.04); }
-.hero-food-cell.tall { grid-row: span 2; font-size: 4.5rem; }
+.hero-food-cell.tall { grid-row: span 2; }
 
 .order-badge {
   position: absolute;
